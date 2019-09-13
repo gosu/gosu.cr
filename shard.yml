@@ -1,0 +1,9 @@
+name: gosu
+version: 0.1.0
+
+authors:
+  - Cyberarm <matthewlikesrobots@gmail.com>
+
+crystal: 0.30.0
+
+license: MIT
