@@ -1,3 +1,5 @@
+![travis ci](https://api.travis-ci.org/cyberarm/gosu.cr.svg?branch=master)
+
 # gosu.cr
 
 TODO: Write a description here
