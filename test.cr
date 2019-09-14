@@ -7,20 +7,30 @@ require "./src/gosu"
 # Gosu::Window._destroy_window(window)
 
 class Window < Gosu::Window
-  @image : Gosu::Image
+  # @image : Gosu::Image
   def initialize
-    @image = Gosu::Image.new("/home/cyberarm/untitled.png")
+    # @image = Gosu::Image.new("/home/cyberarm/untitled.png")
+    @song = Gosu::Song.new("/home/cyberarm/Downloads/466795__breviceps__bumblebee.wav")
+    @song.play(true)
 
     super(512, 480, false, 16.67, true)
     self.caption = "Hello World"
   end
 
   def draw
-    @image.draw(0, 0, 0)
+    # @image.draw(0, 0, 0)
   end
 
   def update
     self.caption = "Hello World: #{Gosu.fps} fps"
+    song = Gosu::Song.current_song
+    if song
+      if song.paused?
+        song.play(true)
+      else
+        song.pause
+      end
+    end
   end
 end
 

@@ -1,7 +1,6 @@
 require "./gosu/window"
 require "./gosu/image"
-
-# require "./gosu/window"
+require "./gosu/song"
 
 module Gosu
   @[Link("gosu")]
