@@ -1,19 +1,19 @@
 module Gosu
   @[Link("gosu")]
   lib SongC
-    fun create_song      = Gosu_Song_create(filename : UInt8*) : UInt8*
-    fun destroy_song     = Gosu_Song_destroy(song : UInt8*)
+    fun create_song = Gosu_Song_create(filename : UInt8*) : UInt8*
+    fun destroy_song = Gosu_Song_destroy(song : UInt8*)
 
-    fun current_song     = Gosu_Song_current_song : UInt8*
+    fun current_song = Gosu_Song_current_song : UInt8*
 
-    fun song_play        = Gosu_Song_play(song : UInt8*, looping : Bool)
-    fun song_playing     = Gosu_Song_playing(song : UInt8*) : Bool
-    fun song_pause       = Gosu_Song_pause(song : UInt8*)
-    fun song_paused      = Gosu_Song_paused(song : UInt8*) : Bool
-    fun song_stop        = Gosu_Song_stop(song : UInt8*)
+    fun song_play = Gosu_Song_play(song : UInt8*, looping : Bool)
+    fun song_playing = Gosu_Song_playing(song : UInt8*) : Bool
+    fun song_pause = Gosu_Song_pause(song : UInt8*)
+    fun song_paused = Gosu_Song_paused(song : UInt8*) : Bool
+    fun song_stop = Gosu_Song_stop(song : UInt8*)
 
-    fun song_volume      = Gosu_Song_volume(song : UInt8*) : Float64
-    fun song_set_volume  = Gosu_Song_set_volume(song : UInt8*, volume : Float64)
+    fun song_volume = Gosu_Song_volume(song : UInt8*) : Float64
+    fun song_set_volume = Gosu_Song_set_volume(song : UInt8*, volume : Float64)
   end
 
   class Song
@@ -27,7 +27,8 @@ module Gosu
     end
 
     @__song : UInt8*
-    def initialize(filename_or_pointer : String|UInt8*)
+
+    def initialize(filename_or_pointer : String | UInt8*)
       if filename_or_pointer.is_a?(String)
         @__song = SongC.create_song(filename_or_pointer)
       elsif filename_or_pointer.is_a?(Pointer(UInt8))
