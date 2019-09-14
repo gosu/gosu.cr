@@ -1,8 +1,7 @@
-![travis ci](https://api.travis-ci.org/cyberarm/gosu.cr.svg?branch=master)
-
 # gosu.cr
+Shard for using Gosu with Crystal
 
-TODO: Write a description here
+_Under development:_ implementation is incomplete.
 
 ## Installation
 
@@ -11,7 +10,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      gosu.cr:
-       github: cyberarm/gosu.cr
+       github: gosu/gosu.cr
    ```
 
 2. Run `shards install`
@@ -20,17 +19,26 @@ TODO: Write a description here
 
 ```crystal
 require "gosu"
+
+class Window < Gosu::Window
+  def initialize
+    super(512, 512)
+  end
+end
+
+Window.new.show
 ```
 
-TODO: Write usage instructions here
+Where possible gosu.cr imitates the [Ruby gem](https://rubydoc.info/github/gosu/gosu).
 
 ## Development
 
-TODO: Write development instructions here
+1. Install [gosu](https://github.com/gosu/gosu) as a system library, [see wiki](https://github.com/gosu/gosu/wiki/Getting-Started-on-Linux#compiling-gosu-for-c).
+(Note: may need to edit `gosu/cmake/build/cmake_install.cmake` to change `set(CMAKE_INSTALL_PREFIX "/usr/local")` to `set(CMAKE_INSTALL_PREFIX "/usr")`)
 
 ## Contributing
 
-1. Fork it (<https://github.com/cyberarm/gosu.cr/fork>)
+1. Fork it (<https://github.com/gosu/gosu.cr/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
