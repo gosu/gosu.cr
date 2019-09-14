@@ -9,7 +9,7 @@ _Under development:_ implementation is incomplete.
 
    ```yaml
    dependencies:
-     gosu.cr:
+     gosu:
        github: gosu/gosu.cr
    ```
 
