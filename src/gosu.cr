@@ -18,6 +18,10 @@ module Gosu
   @[Link("gosu")]
   lib GosuC
     fun fps = Gosu_fps : UInt32
+
+    fun button_down = Gosu_button_down(id : UInt32) : Bool
+    fun draw_rect = Gosu_draw_rect(x : Float64, y : Float64, width : Float64, height : Float64,
+                                   color : UInt32, z : Float64, mode : UInt32)
   end
 
   # Returns the current framerate, in frames per second.
@@ -27,5 +31,12 @@ module Gosu
 
   # Returns whether the button `id` is currently pressed.
   def self.button_down?(id : UInt32) : Bool
+    GosuC.button_down(id)
+  end
+
+  def self.draw_rect(x : Float64|Int32, y : Float64|Int32, width : Float64|Int32, height : Float64|Int32,
+                     color : Gosu::Color|UInt32 = 0xff_ffffff, z : Float64|Int32 = 0, mode : UInt32 = 0)
+    GosuC.draw_rect(x.to_f64, y.to_f64, width.to_f64, height.to_f64,
+                    color.is_a?(Gosu::Color) ? color.gl : color, z.to_f64, mode)
   end
 end

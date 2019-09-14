@@ -7,6 +7,9 @@ module Gosu
     fun window_caption = Gosu_Window_caption(window : UInt8*) : UInt8*
     fun window_set_caption = Gosu_Window_set_caption(window : UInt8*, text : UInt8*)
 
+    fun window_text_input = Gosu_Window_text_input(window : UInt8*) : UInt8*
+    fun window_set_text_input = Gosu_Window_set_text_input(window : UInt8*, input : UInt8*)
+
     fun window_set_draw = Gosu_Window_set_draw(window : UInt8*, function : Void*)
     fun window_set_update = Gosu_Window_set_update(window : UInt8*, function : Void*)
 
@@ -14,6 +17,9 @@ module Gosu
     fun window_height = Gosu_Window_height(window : UInt8*) : Int32
     fun window_set_width = Gosu_Window_set_width(window : UInt8*, width : Int32)
     fun window_set_height = Gosu_Window_set_height(window : UInt8*, height : Int32)
+
+    fun window_fullscreen = Gosu_Window_fullscreen(window : UInt8*) : Bool
+    fun window_set_fullscreen = Gosu_Window_set_fullscreen(window : UInt8*, fullscreen : Bool)
 
     fun destroy_window = Gosu_Window_destroy(window : UInt8*)
 
@@ -36,10 +42,12 @@ module Gosu
     #
     # Returns the currently active text input, if any.
     def text_input : Gosu::TextInput?
+      WindowC.text_input(@__pointer)
     end
 
     # Sets the active `TextInput` to `input`. Set to nil to disable keyboard capture.
     def text_input=(input : Gosu::TextInput?)
+      WindowC.text_set_input(@__pointer, input)
     end
 
     # This method is called after every update and whenever the OS wants the window to repaint itself. Your application's rendering code should go here.
@@ -144,7 +152,7 @@ module Gosu
 
     # Returns the window's caption, usually displayed in the title bar.
     def caption : String
-      WindowC.window_caption(@__pointer)
+      String.new(WindowC.window_caption(@__pointer))
     end
 
     # Sets the window's caption to `string`.
