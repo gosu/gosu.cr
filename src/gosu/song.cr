@@ -66,6 +66,7 @@ module Gosu
       SongC.song_stop(@__song)
     end
 
+    # :nodoc:
     def finalize
       SongC.destroy_song(@__song)
     end

@@ -8,14 +8,58 @@ module Gosu
   end
 
   class Image
-    def initialize(filename : String, flags : UInt32 = 0)
-      @__image = ImageC.create_image(filename, flags)
+    # Converts `mode` to number.
+    # Valid  blend modes are: `:default` and `:additive`.
+    def self.blend_mode(mode : Symbol) : Int32
+      case mode
+      when :default
+        0
+      when :additive
+        1
+      else
+        0
+      end
     end
 
-    def draw(x : Float64, y : Float64, z : Float64, scale_x : Float64 = 1.0, scale_y : Float64 = 1.0, color : UInt32 = 0xffffffff, flags : UInt32 = 0)
-      ImageC.image_draw(@__image, x, y, z, scale_x, scale_y, color, flags)
+    # Converts flags to `UInt32` bitmask.
+    def self.flags_to_bitmask(retro : Bool = false) : UInt32
+      mask : UInt32 = 0
+
+      mask |= 1 << 5 if retro
+
+      return mask
     end
 
+    def initialize(filename : String, retro : Bool = false)
+      @__image = ImageC.create_image(filename, Image.flags_to_bitmask(retro))
+    end
+
+    # Draws the image with its top left corner at (x, y).
+    #
+    # `x` the X coordinate.
+    #
+    # `y` the Y coordinate.
+    #
+    # `z` the Z-order.
+    #
+    # `scale_x` the horizontal scaling factor.
+    #
+    # `scale_y` the vertical scaling factor.
+    #
+    # `color` a `Gosu::Color` or `UInt32`
+    #
+    # `mode` [:default, :additive] the blending mode to use.
+    #
+    #
+    # See `draw_rot`
+    # See `draw_as_quad`
+    # See https://github.com/gosu/gosu/wiki/Basic-Concepts#drawing-with-colours Drawing with colors, explained in the Gosu Wiki
+    # See https://github.com/gosu/gosu/wiki/Basic-Concepts#z-ordering Z-ordering explained in the Gosu Wiki
+    def draw(x : Float64, y : Float64, z : Float64, scale_x : Float64 = 1.0, scale_y : Float64 = 1.0, color : UInt32 = 0xffffffff, mode : Symbol = :default)
+      ImageC.image_draw(@__image, x, y, z, scale_x, scale_y, color, Image.blend_mode(mode))
+    end
+
+    # :nodoc:
     def finalize
       ImageC.destroy_image(@__image)
     end
