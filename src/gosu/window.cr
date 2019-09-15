@@ -10,8 +10,8 @@ module Gosu
     fun window_text_input = Gosu_Window_text_input(window : UInt8*) : UInt8*
     fun window_set_text_input = Gosu_Window_set_text_input(window : UInt8*, input : UInt8*)
 
-    fun window_set_draw = Gosu_Window_set_draw(window : UInt8*, function : Void*)
-    fun window_set_update = Gosu_Window_set_update(window : UInt8*, function : Void*)
+    fun window_set_draw = Gosu_Window_set_draw(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_update = Gosu_Window_set_update(window : UInt8*, function : Void* ->, data : Void*)
 
     fun window_width = Gosu_Window_width(window : UInt8*) : Int32
     fun window_height = Gosu_Window_height(window : UInt8*) : Int32
@@ -22,20 +22,17 @@ module Gosu
     fun window_set_fullscreen = Gosu_Window_set_fullscreen(window : UInt8*, fullscreen : Bool)
 
     fun destroy_window = Gosu_Window_destroy(window : UInt8*)
-
-    # fun callback(function: Void* ->)
   end
 
   class Window
     @@boxed_draw : Pointer(Void)?
+    @@boxed_update : Pointer(Void)?
 
     def initialize(width, height, fullscreen = false, update_interval = 16.66666667, resizable = false)
       @__pointer = WindowC.create_window(width, height, fullscreen, update_interval, resizable)
 
-      f = ->{ draw } # This method of passing Proc is incorrect as context is lost
-      WindowC.window_set_draw(@__pointer, f.pointer)
-      f = ->{ update }
-      WindowC.window_set_update(@__pointer, f.pointer)
+      _set_update_callback
+      _set_draw_callback
     end
 
     # The currently active `TextInput`. If not nil, all keyboard input will be handled by this object.
@@ -209,6 +206,33 @@ module Gosu
     # Thank you!
     def tick : Bool
       WindowC.window_tick(@__pointer)
+    end
+
+    # **HORRIBLE** duplication, more research needed.
+    # :nodoc:
+    def _set_update_callback
+      proc = ->{ update }
+      box = Box.box(proc)
+
+      @@boxed_update = box
+
+      WindowC.window_set_update(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @@boxed_update)
+    end
+
+    # :nodoc:
+    def _set_draw_callback
+      proc = ->{ draw }
+      box = Box.box(proc)
+
+      @@boxed_draw = box
+
+      WindowC.window_set_draw(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @@boxed_draw)
     end
 
     # :nodoc:

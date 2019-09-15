@@ -34,6 +34,10 @@ module Gosu
       @__image = ImageC.create_image(filename, Image.flags_to_bitmask(retro))
     end
 
+    def initialize(pointer : UInt8*)
+      @__image = pointer
+    end
+
     # Draws the image with its top left corner at (x, y).
     #
     # `x` the X coordinate.
