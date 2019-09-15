@@ -21,6 +21,7 @@ module Gosu
 
     fun button_down = Gosu_button_down(id : UInt32) : Bool
     fun milliseconds = Gosu_milliseconds : UInt64
+    fun default_font_name = Gosu_default_font_name : UInt8*
     fun draw_rect = Gosu_draw_rect(x : Float64, y : Float64, width : Float64, height : Float64,
                                    color : UInt32, z : Float64, mode : UInt32)
   end
@@ -39,9 +40,13 @@ module Gosu
     GosuC.milliseconds
   end
 
-  def self.draw_rect(x : Float64|Int32, y : Float64|Int32, width : Float64|Int32, height : Float64|Int32,
-                     color : Gosu::Color|Int64|UInt32 = 0xff_ffffff, z : Float64|Int32 = 0, mode : UInt32 = 0)
+  def self.default_font_name : String
+    String.new(GosuC.default_font_name)
+  end
+
+  def self.draw_rect(x : Float64 | Int32, y : Float64 | Int32, width : Float64 | Int32, height : Float64 | Int32,
+                     color : Gosu::Color | Int64 | UInt32 = 0xff_ffffff, z : Float64 | Int32 = 0, mode : UInt32 = 0)
     GosuC.draw_rect(x.to_f64, y.to_f64, width.to_f64, height.to_f64,
-                    color.is_a?(Gosu::Color) ? color.gl : color, z.to_f64, mode)
+      color.is_a?(Gosu::Color) ? color.gl : color, z.to_f64, mode)
   end
 end

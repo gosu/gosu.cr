@@ -9,19 +9,19 @@ module Gosu
   end
 
   class Color
-    def self.argb(color : UInt32|Int64) : Gosu::Color
+    def self.argb(color : UInt32 | Int64) : Gosu::Color
       return Gosu::Color.new(color)
     end
 
-    def self.argb(alpha : UInt8|Int64, red : UInt8|Int64, green : UInt8|Int64, blue : UInt8|Int64) : Gosu::Color
+    def self.argb(alpha : UInt8 | Int64, red : UInt8 | Int64, green : UInt8 | Int64, blue : UInt8 | Int64) : Gosu::Color
       return Gosu::Color.new(alpha.to_u8, red.to_u8, green.to_u8, blue.to_u8)
     end
 
-    def self.rgba(red : UInt8|Int64, green : UInt8|Int64, blue : UInt8|Int64, alpha : UInt8|Int64) : Gosu::Color
+    def self.rgba(red : UInt8 | Int64, green : UInt8 | Int64, blue : UInt8 | Int64, alpha : UInt8 | Int64) : Gosu::Color
       Gosu::Color.argb(alpha.to_u8, red.to_u8, green.to_u8, blue.to_u8)
     end
 
-    def self.rgb(red : UInt8|Int64, green : UInt8|Int64, blue : UInt8|Int64) : Gosu::Color
+    def self.rgb(red : UInt8 | Int64, green : UInt8 | Int64, blue : UInt8 | Int64) : Gosu::Color
       Gosu::Color.argb(255.to_u8, red.to_u8, green.to_u8, blue.to_u8)
     end
 
@@ -33,7 +33,7 @@ module Gosu
       Gosu::Color.new(ColorC.create_color_from_ahsv(alpha.to_u8, hue, saturation, value))
     end
 
-    def initialize(color : UInt32|Int64)
+    def initialize(color : UInt32 | Int64)
       @color = ColorC.create_color(color)
     end
 
