@@ -4,6 +4,9 @@ module Gosu
     fun create_image = Gosu_Image_create(filename : UInt8*, flags : UInt32) : UInt8*
     fun image_draw = Gosu_Image_draw(image : UInt8*, x : Float64, y : Float64, z : Float64,
                                      scale_x : Float64, scale_y : Float64, color : UInt32, flags : UInt32)
+    fun image_width = Gosu_Image_width(image : UInt8*) : Int32
+    fun image_height = Gosu_Image_height(image : UInt8*) : Int32
+    fun image_to_blob = Gosu_Image_to_blob(image : UInt8*) : UInt8*
     fun destroy_image = Gosu_Image_destroy(image : UInt8*)
   end
 
@@ -61,6 +64,18 @@ module Gosu
     # See https://github.com/gosu/gosu/wiki/Basic-Concepts#z-ordering Z-ordering explained in the Gosu Wiki
     def draw(x : Float64, y : Float64, z : Float64, scale_x : Float64 = 1.0, scale_y : Float64 = 1.0, color : UInt32 = 0xffffffff, mode : Symbol = :default)
       ImageC.image_draw(@__image, x, y, z, scale_x, scale_y, color, Image.blend_mode(mode))
+    end
+
+    def width
+      ImageC.image_width(@__image)
+    end
+
+    def height
+      ImageC.image_height(@__image)
+    end
+
+    def to_blob
+      String.new(ImageC.image_to_blob(@__image), width * height * 4)
     end
 
     # :nodoc:
