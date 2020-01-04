@@ -23,16 +23,16 @@ module Gosu
     fun milliseconds = Gosu_milliseconds : UInt64
     fun default_font_name = Gosu_default_font_name : UInt8*
 
-    fun transform = Gosu_transform()
-    fun translate = Gosu_translate()
-    fun rotate = Gosu_rotate()
-    fun scale = Gosu_scale()
-    fun clip_to = Gosu_clip_to()
+    fun transform = Gosu_transform
+    fun translate = Gosu_translate
+    fun rotate = Gosu_rotate
+    fun scale = Gosu_scale
+    fun clip_to = Gosu_clip_to
 
-    fun gl_z = Gosu_gl_z()
-    fun gl = Gosu_gl()
-    fun render = Gosu_render()
-    fun record_ = Gosu_record()
+    fun gl_z = Gosu_gl_z
+    fun gl = Gosu_gl
+    fun render = Gosu_render
+    fun record_ = Gosu_record
 
     fun button_down = Gosu_button_down(id : UInt32) : Bool
     fun button_id_to_char = Gosu_button_id_to_char(id : UInt32) : UInt8*
@@ -102,35 +102,32 @@ module Gosu
 
   def self.draw_line(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
                      x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
-                     z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default
-    )
+                     z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
     GosuC.draw_line(x1.to_f64, y2.to_f64, color_to_drawop(c1),
-                    x2.to_f64, y2.to_f64, color_to_drawop(c2),
-                    z.to_f64, blend_mode(mode))
+      x2.to_f64, y2.to_f64, color_to_drawop(c2),
+      z.to_f64, blend_mode(mode))
   end
 
   def self.draw_quad(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
                      x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
                      x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
                      x4 : Float64 | Int32, y4 : Float64 | Int32, c4 : Gosu::Color | Int64 | UInt32,
-                     z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default
-    )
+                     z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
     GosuC.draw_quad(x1.to_f64, y2.to_f64, color_to_drawop(c1),
-                    x2.to_f64, y2.to_f64, color_to_drawop(c2),
-                    x3.to_f64, y3.to_f64, color_to_drawop(c3),
-                    x4.to_f64, y4.to_f64, color_to_drawop(c4),
-                    z.to_f64, blend_mode(mode))
+      x2.to_f64, y2.to_f64, color_to_drawop(c2),
+      x3.to_f64, y3.to_f64, color_to_drawop(c3),
+      x4.to_f64, y4.to_f64, color_to_drawop(c4),
+      z.to_f64, blend_mode(mode))
   end
 
   def self.draw_triangle(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
-                     x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
-                     x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
-                     z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default
-    )
+                         x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
+                         x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
+                         z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
     GosuC.draw_triangle(x1.to_f64, y2.to_f64, color_to_drawop(c1),
-                    x2.to_f64, y2.to_f64, color_to_drawop(c2),
-                    x3.to_f64, y3.to_f64, color_to_drawop(c3),
-                    z.to_f64, blend_mode(mode))
+      x2.to_f64, y2.to_f64, color_to_drawop(c2),
+      x3.to_f64, y3.to_f64, color_to_drawop(c3),
+      z.to_f64, blend_mode(mode))
   end
 
   def self.draw_rect(x : Float64 | Int32, y : Float64 | Int32, width : Float64 | Int32, height : Float64 | Int32,
@@ -180,7 +177,6 @@ module Gosu
   def self.available_height(window : UInt8* = Pointer(UInt8).null) : UInt32
     GosuC.available_height(window)
   end
-
 
   private def self.color_to_drawop(color : Gosu::Color | Int64 | UInt32)
     color.is_a?(Gosu::Color) ? color.gl : color
