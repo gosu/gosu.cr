@@ -218,8 +218,8 @@ module Gosu
       WindowC.window_tick(@__pointer)
     end
 
-    # **HORRIBLE** duplication, more research needed.
     # :nodoc:
+    # **HORRIBLE** duplication, more research needed.
     def _set_update_callback
       proc = ->{ update }
       box = Box.box(proc)
