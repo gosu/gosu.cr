@@ -48,12 +48,16 @@ module Gosu
     #
     # Returns the currently active text input, if any.
     def text_input : Gosu::TextInput?
-      WindowC.text_input(@__pointer)
+      Gosu::TextInput.new( WindowC.window_text_input(@__pointer) )
     end
 
     # Sets the active `TextInput` to `input`. Set to nil to disable keyboard capture.
     def text_input=(input : Gosu::TextInput?)
-      WindowC.text_set_input(@__pointer, input)
+      if input
+        WindowC.window_set_text_input(@__pointer, input.pointer)
+      else
+        WindowC.window_set_text_input(@__pointer, Pointer(UInt8).null)
+      end
     end
 
     # This method is called after every update and whenever the OS wants the window to repaint itself. Your application's rendering code should go here.
