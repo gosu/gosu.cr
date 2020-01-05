@@ -39,8 +39,8 @@ module Gosu
 
     fun gl_z = Gosu_gl_z(double : Float64, function : Void* ->, data : Void*)
     fun gl = Gosu_gl(function : Void* ->, data : Void*)
-    fun render = Gosu_render(width : Int32, height : Int32, function : Void* ->, data : Void*, image_flags : UInt32)
-    fun record_ = Gosu_record(width : Int32, height : Int32, function : Void* ->, data : Void*)
+    fun render = Gosu_render(width : Int32, height : Int32, function : Void* ->, data : Void*, image_flags : UInt32) : UInt8*
+    fun record_ = Gosu_record(width : Int32, height : Int32, function : Void* ->, data : Void*) : UInt8*
 
     fun button_down = Gosu_button_down(id : UInt32) : Bool
     fun button_id_to_char = Gosu_button_id_to_char(id : UInt32) : UInt8*
@@ -96,10 +96,18 @@ module Gosu
   end
 
   def self.gl(z : Float64?, &block)
+    box = Box.box(block)
+
     if z
-      GosuC.gl_z(z)
+      GosuC.gl_z(z.to_f64, ->(data : Void*) {
+        callback = Box(typeof(block)).unbox(data)
+        callback.call
+      }, box)
     else
-      GosuC.gl
+      GosuC.gl(->(data : Void*) {
+        callback = Box(typeof(block)).unbox(data)
+        callback.call
+      }, box)
     end
   end
 
@@ -107,31 +115,73 @@ module Gosu
                      m4 : Float64 | Int32, m5 : Float64 | Int32, m6 : Float64 | Int32, m7 : Float64 | Int32,
                      m8 : Float64 | Int32, m9 : Float64 | Int32, m10 : Float64 | Int32, m11 : Float64 | Int32,
                      m12 : Float64 | Int32, m13 : Float64 | Int32, m14 : Float64 | Int32, m15 : Float64 | Int32, &block)
+    box = Box.box(block)
+
+    GosuC.transform(m0.to_f64, m1.to_f64, m2.to_f64, m3.to_f64, m4.to_f64, m5.to_f64, m6.to_f64, m7.to_f64,
+      m8.to_f64, m9.to_f64, m10.to_f64, m11.to_f64, m12.to_f64, m13.to_f64, m14.to_f64, m15.to_f64,
+      ->(data : Void*) {
+        callback = Box(typeof(block)).unbox(data)
+        callback.call
+      }, box)
   end
 
   def self.translate(x : Float64 | Int32, y : Float64 | Int32, &block)
+    box = Box.box(block)
+
+    GosuC.translate(x.to_f64, y.to_f64, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box)
   end
 
   def self.rotate(angle : Float64 | Int32, around_x : Float64 | Int32 = 0, around_y : Float64 | Int32 = 0, &block)
+    box = Box.box(block)
+
+    GosuC.rotate(angle.to_f64, around_x.to_f64, around_y.to_f64, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box)
   end
 
-  def self.scale(scale_x : Float64 | Int32, scale_y : Float64 | Int32, around_x : Float64 | Int32 = 0, around_y : Float64 | Int32 = 0, &block)
+  def self.scale(scale_x : Float64 | Int32, scale_y : Float64 | Int32,
+                 around_x : Float64 | Int32 = 0, around_y : Float64 | Int32 = 0, &block)
+    box = Box.box(block)
+
+    GosuC.scale(scale_x.to_f64, scale_y.to_f64, around_x.to_f64, around_y.to_f64, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box)
   end
 
   def self.clip_to(x : Float64 | Int32, y : Float64 | Int32, width : Float64 | Int32, height : Float64 | Int32, &block)
+    box = Box.box(block)
+
+    GosuC.clip_to(x.to_f64, y.to_f64, width.to_f64, height.to_f64, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box)
   end
 
-  def self.render(width : Int32, height : Int32, image_flags : UInt32, &block) : Gosu::Image
+  def self.render(width : Int32, height : Int32, retro : Bool = false, &block) : Gosu::Image
+    box = Box.box(block)
+
+    image = GosuC.render(width, height, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box, Image.flags_to_bitmask(retro))
+
+    return Gosu::Image.new(image)
   end
 
   def self.record(width : Int32, height : Int32, &block) : Gosu::Image
-    image = nil#GosuC.record_(width, height, block.pointer, Void)
+    box = Box.box(block)
 
-    if image
-      Gosu::Image.new(image)
-    else
-      raise "error"
-    end
+    image = GosuC.record_(width, height, ->(data : Void*) {
+      callback = Box(typeof(block)).unbox(data)
+      callback.call
+    }, box)
+
+    return Gosu::Image.new(image)
   end
 
   # Returns whether the button `id` is currently pressed.

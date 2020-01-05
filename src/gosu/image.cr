@@ -7,6 +7,7 @@ module Gosu
     fun image_width = Gosu_Image_width(image : UInt8*) : Int32
     fun image_height = Gosu_Image_height(image : UInt8*) : Int32
     fun image_to_blob = Gosu_Image_to_blob(image : UInt8*) : UInt8*
+    fun image_save = Gosu_Image_save(image : UInt8*, filename : UInt8*)
     fun destroy_image = Gosu_Image_destroy(image : UInt8*)
   end
 
@@ -62,8 +63,10 @@ module Gosu
     # See `draw_as_quad`
     # See https://github.com/gosu/gosu/wiki/Basic-Concepts#drawing-with-colours Drawing with colors, explained in the Gosu Wiki
     # See https://github.com/gosu/gosu/wiki/Basic-Concepts#z-ordering Z-ordering explained in the Gosu Wiki
-    def draw(x : Float64, y : Float64, z : Float64, scale_x : Float64 = 1.0, scale_y : Float64 = 1.0, color : UInt32 = 0xffffffff, mode : Symbol = :default)
-      ImageC.image_draw(@__image, x, y, z, scale_x, scale_y, color, Image.blend_mode(mode))
+    def draw(x : Float64 | Int32, y : Float64 | Int32, z : Float64 | Int32,
+             scale_x : Float64 | Int32 = 1.0, scale_y : Float64 | Int32 = 1.0, color : UInt32 = 0xffffffff,
+             mode : Symbol = :default)
+      ImageC.image_draw(@__image, x.to_i, y.to_i, z.to_i, scale_x.to_i, scale_y.to_i, color, Image.blend_mode(mode))
     end
 
     def width
@@ -76,6 +79,10 @@ module Gosu
 
     def to_blob
       String.new(ImageC.image_to_blob(@__image), width * height * 4)
+    end
+
+    def save(filename : String)
+      ImageC.image_save(@__image, filename)
     end
 
     # :nodoc:

@@ -1,4 +1,5 @@
 require "./spec_helper"
+include SpecHelper
 
 describe Gosu do
   it "test drawing primitives" do
@@ -16,7 +17,6 @@ describe Gosu do
 
     img.class.should eq(Gosu::Image)
   end
-
 
   # TODO: Manipulating the current drawing context
   # clip_to  flush  gl  record  rotate  scale  transform  translate
@@ -49,14 +49,14 @@ describe Gosu do
 
   it "test angle" do
     {
-      { 0,  0} =>   0.0,
-      { 1,  0} =>  90.0,
-      { 1,  1} => 135.0,
-      { 0,  1} => 180.0,
-      {-1,  1} => 225.0,
-      {-1,  0} => 270.0,
+      {0, 0}   => 0.0,
+      {1, 0}   => 90.0,
+      {1, 1}   => 135.0,
+      {0, 1}   => 180.0,
+      {-1, 1}  => 225.0,
+      {-1, 0}  => 270.0,
       {-1, -1} => 315.0,
-      { 0, -1} =>   0.0, # 360.0
+      {0, -1}  => 0.0, # 360.0
     }.each do |point, angle|
       Gosu.angle(0, 0, *point).should eq(angle)
     end
@@ -64,9 +64,9 @@ describe Gosu do
 
   it "test angle diff" do
     {
-      [90,  95] =>    5.0,
-      [90,  85] =>   -5.0,
-      [90, 269] =>  179.0,
+      [90, 95]  => 5.0,
+      [90, 85]  => -5.0,
+      [90, 269] => 179.0,
       [90, 271] => -179.0,
     }.each do |(angle1, angle2), delta|
       Gosu.angle_diff(angle1, angle2).should eq(delta)
@@ -75,12 +75,12 @@ describe Gosu do
 
   it "test offset" do
     {
-      [ 36.86, 5] => [ 3, -4], # a² + b² = c² | 3² + 4² = 5²
-      [  0.0,  1] => [ 0, -1],
-      [ 90.0,  1] => [ 1,  0],
-      [180.0,  1] => [ 0,  1],
-      [-90.0,  1] => [-1,  0],
-    }.each do |(angle,length),(dx, dy)|
+      [36.86, 5] => [3, -4], # a² + b² = c² | 3² + 4² = 5²
+      [0.0, 1]   => [0, -1],
+      [90.0, 1]  => [1, 0],
+      [180.0, 1] => [0, 1],
+      [-90.0, 1] => [-1, 0],
+    }.each do |(angle, length), (dx, dy)|
       Gosu.offset_x(angle, length).should be_close(dx, 0.1)
       Gosu.offset_y(angle, length).should be_close(dy, 0.1)
     end
@@ -89,9 +89,9 @@ describe Gosu do
   # TODO: Add more test vectors
   it "test distance" do
     {
-      [0,0 , 3,4] => 5, # a² + b² = c² | 3² + 4² = 5²
-      [-2,-3 , -4, 4] => 7.28,
-    }.each do |(x1,y1,x2,y2), dist|
+      [0, 0, 3, 4]    => 5, # a² + b² = c² | 3² + 4² = 5²
+      [-2, -3, -4, 4] => 7.28,
+    }.each do |(x1, y1, x2, y2), dist|
       Gosu.distance(x1, y1, x2, y2).should be_close(dist, 0.1)
     end
   end
@@ -106,12 +106,10 @@ describe Gosu do
   end
 
   it "test render" do
-    # Gosu.render does not work on Appveyor.
     sizes = [25, 50, 500]
 
-
     sizes.each do |size|
-      assert_output_matches("test_gosu_module/triangle-#{size}", 0.9, [size, size]) do
+      assert_output_matches("test_gosu_module/triangle-#{size}", 0.9, {size, size}) do
         Gosu.draw_triangle(0, 0, 0xff_ff0000, size, 0, 0xff_00ff00, size, size, 0xff_0000ff, 0)
       end
     end
