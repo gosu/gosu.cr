@@ -168,7 +168,7 @@ module Gosu
     image = GosuC.render(width, height, ->(data : Void*) {
       callback = Box(typeof(block)).unbox(data)
       callback.call
-    }, box, Image.flags_to_bitmask(retro))
+    }, box, Gosu.image_flags(retro))
 
     return Gosu::Image.new(image)
   end

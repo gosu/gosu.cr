@@ -8,29 +8,27 @@ module Gosu
     fun create_image_from_markup = Gosu_Image_create_from_markup(text : UInt8*, font : UInt8*, line_height : Float64,
                                                                  width : Int32, spacing : Float64, alignment_flags : UInt32,
                                                                  font_flags : UInt32, image_flags : UInt32) : UInt8*
+    fun load_tiles = Gosu_Image_create_from_tiles(filename : UInt8*, width : Int32, height : Int32,
+                                                  function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
+    fun load_tiles_from_image = Gosu_Image_create_tiles_from_image(image : UInt8*, width : Int32, height : Int32,
+                                                                   function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
 
-    fun image_draw = Gosu_Image_draw(image : UInt8*, x : Float64, y : Float64, z : Float64,
+    fun draw = Gosu_Image_draw(image : UInt8*, x : Float64, y : Float64, z : Float64,
                                      scale_x : Float64, scale_y : Float64, color : UInt32, flags : UInt32)
+    fun draw_rot = Gosu_Image_draw_rot(image : UInt8*, x : Float64, y : Float64, z : Float64, angle : Float64,
+                                       center_x : Float64, center_y : Float64, scale_x : Float64, scale_y : Float64,
+                                       color : UInt32, flags : UInt32)
 
-    fun image_width = Gosu_Image_width(image : UInt8*) : Int32
-    fun image_height = Gosu_Image_height(image : UInt8*) : Int32
+    fun width = Gosu_Image_width(image : UInt8*) : Int32
+    fun height = Gosu_Image_height(image : UInt8*) : Int32
 
-    fun image_to_blob = Gosu_Image_to_blob(image : UInt8*) : UInt8*
-    fun image_save = Gosu_Image_save(image : UInt8*, filename : UInt8*)
+    fun to_blob = Gosu_Image_to_blob(image : UInt8*) : UInt8*
+    fun save = Gosu_Image_save(image : UInt8*, filename : UInt8*)
 
     fun destroy_image = Gosu_Image_destroy(image : UInt8*)
   end
 
   class Image
-    # Converts flags to `UInt32` bitmask.
-    def self.image_flags(retro : Bool = false) : UInt32
-      mask : UInt32 = 0
-
-      mask |= 1 << 5 if retro
-
-      return mask
-    end
-
     def self.from_text(text : String, line_height : Float64, font : String = Gosu.default_font_name, width : Float64 = -1,
                        spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
                        retro : Bool = false) : Gosu::Image
@@ -45,12 +43,42 @@ module Gosu
                                                        Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)) )
     end
 
-    def initialize(filename : String, retro : Bool = false)
-      @__image = ImageC.create_image(filename, Gosu.image_flags(retro))
+    def self.load_tiles(filename_or_image : String | Gosu::Image, width : Int32, height : Int32,
+                        retro : Bool = false, tileable : Bool = false) : Array(Gosu::Image)
+      raise "Can not open file: #{filename_or_image}" if filename_or_image.is_a?(String) && !File.exists?(filename_or_image)
+      tiles = [] of Gosu::Image
+
+      proc = ->(image : UInt8*) { tiles << Gosu::Image.new(image) }
+      box = Box.box(proc)
+
+      if filename_or_image.is_a?(String)
+        ImageC.load_tiles(filename_or_image, width, height, ->(data : Void*, image : Pointer(UInt8)) {
+          callback = Box(typeof(proc)).unbox(data)
+          callback.call(image)
+        }, box, Gosu.image_flags(retro, tileable))
+
+      else
+        ImageC.load_tiles_from_image(filename_or_image.pointer, width, height, ->(data : Void*, image : UInt8*) {
+          callback = Box(typeof(proc)).unbox(data)
+          callback.call(image)
+        }, box, Gosu.image_flags(retro, tileable))
+      end
+
+      return tiles
+    end
+
+    def initialize(filename : String, retro : Bool = false, tileable : Bool = false)
+      raise "Can not open file: #{filename}" unless File.exists?(filename)
+      @__image = ImageC.create_image(filename, Gosu.image_flags(retro, tileable))
     end
 
     def initialize(pointer : UInt8*)
       @__image = pointer
+    end
+
+    # :nodoc:
+    def pointer
+      @__image
     end
 
     # Draws the image with its top left corner at (x, y).
@@ -77,28 +105,35 @@ module Gosu
     def draw(x : Float64 | Int32, y : Float64 | Int32, z : Float64 | Int32,
              scale_x : Float64 | Int32 = 1.0, scale_y : Float64 | Int32 = 1.0, color : UInt32 = 0xffffffff,
              mode : Symbol = :default)
-      ImageC.image_draw(@__image, x.to_i, y.to_i, z.to_i, scale_x.to_i, scale_y.to_i, color, Gosu.blend_mode(mode))
+      ImageC.draw(pointer, x.to_i, y.to_i, z.to_i, scale_x.to_i, scale_y.to_i, color, Gosu.blend_mode(mode))
+    end
+
+    def draw_rot(x : Float64 | Int32, y : Float64 | Int32, z : Float64 | Int32,
+                 angle : Float64 | Int32, center_x : Float64 | Int32 = 0.5, center_y : Float64 | Int32 = 0.5,
+                 scale_x : Float64 | Int32 = 1, scale_y : Float64 | Int32 = 1, color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE,
+                 mode : Symbol = :default)
+      ImageC.draw_rot(pointer, x, y, z, angle, center_x, center_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def width
-      ImageC.image_width(@__image)
+      ImageC.width(pointer)
     end
 
     def height
-      ImageC.image_height(@__image)
+      ImageC.height(pointer)
     end
 
     def to_blob
-      String.new(ImageC.image_to_blob(@__image), width * height * 4)
+      String.new(ImageC.to_blob(pointer), width * height * 4)
     end
 
     def save(filename : String)
-      ImageC.image_save(@__image, filename)
+      ImageC.save(pointer, filename)
     end
 
     # :nodoc:
     def finalize
-      ImageC.destroy_image(@__image)
+      ImageC.destroy_image(pointer)
     end
   end
 end
