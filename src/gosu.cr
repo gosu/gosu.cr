@@ -3,8 +3,8 @@ require "./gosu/color"
 require "./gosu/window"
 require "./gosu/text_input"
 require "./gosu/image"
+require "./gosu/font"
 
-# require "./gosu/font"
 # require "./gosu/song"
 # require "./gosu/sample"
 # require "./gosu/channel"
@@ -200,7 +200,7 @@ module Gosu
   def self.draw_line(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
                      x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
                      z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
-    GosuC.draw_line(x1.to_f64, y2.to_f64, color_to_drawop(c1),
+    GosuC.draw_line(x1.to_f64, y1.to_f64, color_to_drawop(c1),
       x2.to_f64, y2.to_f64, color_to_drawop(c2),
       z.to_f64, blend_mode(mode))
   end
@@ -210,7 +210,7 @@ module Gosu
                      x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
                      x4 : Float64 | Int32, y4 : Float64 | Int32, c4 : Gosu::Color | Int64 | UInt32,
                      z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
-    GosuC.draw_quad(x1.to_f64, y2.to_f64, color_to_drawop(c1),
+    GosuC.draw_quad(x1.to_f64, y1.to_f64, color_to_drawop(c1),
       x2.to_f64, y2.to_f64, color_to_drawop(c2),
       x3.to_f64, y3.to_f64, color_to_drawop(c3),
       x4.to_f64, y4.to_f64, color_to_drawop(c4),
@@ -221,7 +221,7 @@ module Gosu
                          x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
                          x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
                          z : Float64 | Int32 = 0, mode : UInt32 | Symbol = :default)
-    GosuC.draw_triangle(x1.to_f64, y2.to_f64, color_to_drawop(c1),
+    GosuC.draw_triangle(x1.to_f64, y1.to_f64, color_to_drawop(c1),
       x2.to_f64, y2.to_f64, color_to_drawop(c2),
       x3.to_f64, y3.to_f64, color_to_drawop(c3),
       z.to_f64, blend_mode(mode))
@@ -275,11 +275,48 @@ module Gosu
     GosuC.available_height(window)
   end
 
-  private def self.color_to_drawop(color : Gosu::Color | Int64 | UInt32)
+  def self.color_to_drawop(color : Gosu::Color | Int64 | UInt32)
     color.is_a?(Gosu::Color) ? color.gl : color
   end
 
-  private def self.blend_mode(mode : Symbol | UInt32) : UInt32
+  # SEE: https://github.com/gosu/gosu/blob/master/Gosu/GraphicsBase.hpp
+  def self.image_flags(retro : Bool = false, tileable : Bool = false) : UInt32
+    flags = 0.to_u32
+
+    flags |= 1 << 5 if retro
+    flags |= 1 << 8 if tileable
+
+    return flags
+  end
+
+  def self.font_flags(bold, italic, underline) : UInt32
+    flags = 0.to_u32
+    flags |= 1 if bold
+    flags |= 2 if italic
+    flags |= 4 if underline
+
+    return flags
+  end
+
+  def self.font_alignment_flags(mode) : UInt32
+    case mode
+    when :left
+      0.to_u32
+    when :right
+      1.to_u32
+    when :center
+      2.to_u32
+    when :justify
+      3.to_u32
+    else
+      return mode if mode.is_a?(UInt32)
+      raise "No such mode: #{mode}"
+    end
+  end
+
+  # Converts `mode` to number.
+  # Valid  blend modes are: `:default` and `:additive`.
+  def self.blend_mode(mode) : UInt32
     case mode
     when :default
       0.to_u32
@@ -289,7 +326,7 @@ module Gosu
       2.to_u32
     else
       return mode if mode.is_a?(UInt32)
-      raise "Unknown mode: #{mode}"
+      raise "No such mode: #{mode}"
     end
   end
 end

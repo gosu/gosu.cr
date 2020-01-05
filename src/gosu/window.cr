@@ -54,7 +54,7 @@ module Gosu
     @boxed_needs_cursor : Pointer(Void)?
     @boxed_close : Pointer(Void)?
 
-    @text_input : TextInput?
+    @text_input : Gosu::TextInput?
 
     def initialize(width, height, fullscreen = false, update_interval = 16.66666667, resizable = false)
       @__pointer = WindowC.create_window(width, height, fullscreen, update_interval, resizable)

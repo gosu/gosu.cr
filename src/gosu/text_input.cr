@@ -7,7 +7,7 @@ module Gosu
     fun caret_pos = Gosu_TextInput_caret_pos(textinput : UInt8*) : UInt32
     fun set_caret_pos = Gosu_TextInput_set_caret_pos(textinput : UInt8*, position : UInt32)
     fun selection_start = Gosu_TextInput_selection_start(textinput : UInt8*) : UInt32
-    fun set_caret_pos = Gosu_TextInput_set_caret_pos(textinput : UInt8*, position : UInt32)
+    fun set_selection_start = Gosu_TextInput_set_selection_start(textinput : UInt8*, position : UInt32)
 
     fun text = Gosu_TextInput_text(pointer : UInt8*) : UInt8*
     fun set_text = Gosu_TextInput_set_text(pointer : UInt8*, text : UInt8*)
@@ -57,8 +57,8 @@ module Gosu
     end
 
     # Sets the position of the editing caret to `position`.
-    def set_caret_pos(position : UInt32)
-      TextInputC.set_caret_pos(pointer, position)
+    def caret_pos=(position : UInt32 | Int32)
+      TextInputC.set_caret_pos(pointer, position.to_u32)
     end
 
     # The starting position of the currently selected text.
@@ -67,8 +67,8 @@ module Gosu
     end
 
     # Sets the starting position of the currently selected text to `position`.
-    def set_selection_start(position : UInt32)
-      TextInputC.set_selection_start(pointer, position)
+    def selection_start=(position : UInt32 | Int32)
+      TextInputC.set_selection_start(pointer, position.to_u32)
     end
 
     # The text that the user has typed.
@@ -99,7 +99,7 @@ module Gosu
     # ```
     # input = TextInput.new
     # def input.filter(text_in)
-    #   text_in.upcase.gsub(/[^A-Z0-9]/, '')
+    #   text_in.upcase.gsub(/[^A-Z0-9]/, "")
     # end
     # ```
     def filter(text : String) : String
