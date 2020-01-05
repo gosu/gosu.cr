@@ -24,12 +24,6 @@ module Gosu
     def initialize
       @__textinput = TextInputC.create_textinput
 
-      Gosu::TextInput.new(@__textinput)
-    end
-
-    def initialize(pointer : UInt8*)
-      @__textinput = pointer
-
       proc = ->(text : String){ protected_filter(text) }
       box = Box.box(proc)
 

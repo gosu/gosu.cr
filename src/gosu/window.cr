@@ -37,6 +37,8 @@ module Gosu
     @@boxed_draw : Pointer(Void)?
     @@boxed_update : Pointer(Void)?
 
+    @text_input : TextInput?
+
     def initialize(width, height, fullscreen = false, update_interval = 16.66666667, resizable = false)
       @__pointer = WindowC.create_window(width, height, fullscreen, update_interval, resizable)
 
@@ -48,14 +50,16 @@ module Gosu
     #
     # Returns the currently active text input, if any.
     def text_input : Gosu::TextInput?
-      Gosu::TextInput.new( WindowC.window_text_input(@__pointer) )
+      @text_input ? @text_input : nil
     end
 
     # Sets the active `TextInput` to `input`. Set to nil to disable keyboard capture.
     def text_input=(input : Gosu::TextInput?)
       if input
+        @text_input = input
         WindowC.window_set_text_input(@__pointer, input.pointer)
       else
+        @text_input = nil
         WindowC.window_set_text_input(@__pointer, Pointer(UInt8).null)
       end
     end
