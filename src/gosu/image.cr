@@ -12,18 +12,25 @@ module Gosu
                                                   function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
     fun load_tiles_from_image = Gosu_Image_create_tiles_from_image(image : UInt8*, width : Int32, height : Int32,
                                                                    function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
+    fun subimage = Gosu_Image_create_from_subimage(image : UInt8*, left : Int32, top : Int32, width : Int32, height : Int32) : UInt8*
 
     fun draw = Gosu_Image_draw(image : UInt8*, x : Float64, y : Float64, z : Float64,
                                      scale_x : Float64, scale_y : Float64, color : UInt32, flags : UInt32)
     fun draw_rot = Gosu_Image_draw_rot(image : UInt8*, x : Float64, y : Float64, z : Float64, angle : Float64,
                                        center_x : Float64, center_y : Float64, scale_x : Float64, scale_y : Float64,
                                        color : UInt32, flags : UInt32)
+    fun draw_as_quad = Gosu_Image_draw_as_quad(image : UInt8*, x1 : Float64, y1 : Float64, c1 : UInt32,
+                                               x2 : Float64, y2 : Float64, c2 : UInt32,
+                                               x3 : Float64, y3 : Float64, c3 : UInt32,
+                                               x4 : Float64, y4 : Float64, c4 : UInt32,
+                                               z : Float64, color : UInt32, flags : UInt32)
 
     fun width = Gosu_Image_width(image : UInt8*) : Int32
     fun height = Gosu_Image_height(image : UInt8*) : Int32
 
     fun to_blob = Gosu_Image_to_blob(image : UInt8*) : UInt8*
     fun save = Gosu_Image_save(image : UInt8*, filename : UInt8*)
+    fun insert = Gosu_Image_insert(image : UInt8*, other : UInt8*, x : Int32, y : Int32)
 
     fun destroy_image = Gosu_Image_destroy(image : UInt8*)
   end
@@ -115,6 +122,18 @@ module Gosu
       ImageC.draw_rot(pointer, x, y, z, angle, center_x, center_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
+    def draw_as_quad(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
+                     x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
+                     x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
+                     x4 : Float64 | Int32, y4 : Float64 | Int32, c4 : Gosu::Color | Int64 | UInt32,
+                     z : Float64 | Int32, mode : Symbol)
+      ImageC.draw_as_quad(x1.to_f64, y1.to_f64, Gosu.color_to_drawop(c1),
+                          x2.to_f64, y2.to_f64, Gosu.color_to_drawop(c2),
+                          x3.to_f64, y3.to_f64, Gosu.color_to_drawop(c3),
+                          x4.to_f64, y4.to_f64, Gosu.color_to_drawop(c4),
+                          z.to_f64, Gosu.blend_mode(mode))
+    end
+
     def width
       ImageC.width(pointer)
     end
@@ -129,6 +148,14 @@ module Gosu
 
     def save(filename : String)
       ImageC.save(pointer, filename)
+    end
+
+    def insert(other : Gosu::Image, x : Int32, y : Int32)
+      ImageC.insert(pointer, other.pointer, x, y)
+    end
+
+    def subimage(left : Int32, top : Int32, width : Int32, height : Int32) : Gosu::Image
+      Gosu::Image.new( ImageC.subimage(pointer, left, top, width, height) )
     end
 
     # :nodoc:

@@ -9,9 +9,9 @@ Implemented
 * [x] Window
 * [x] TextInput
 * [x] Font
+* [ ] Image (90%+)
 * [ ] Song (in-progress)
 * [ ] Color (in-progress)
-* [ ] Image (in-progress)
 * [ ] Sample
 * [ ] GLTexInfo
 * [ ] Channel
