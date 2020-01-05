@@ -3,6 +3,20 @@ Shard for using Gosu with Crystal
 
 _Under development:_ implementation is incomplete.
 
+## Status
+Implemented
+* [x] Gosu
+* [x] Window
+* [x] TextInput
+* [ ] Song (in-progress)
+* [ ] Color (in-progress)
+* [ ] Image (in-progress)
+* [ ] Sample
+* [ ] Font
+* [ ] GLTexInfo
+* [ ] Channel
+* [ ] Numeric helper functions e.g. `90.degrees_to_radians`
+
 ## Installation
 
 1. Add the dependency to your `shard.yml`:
