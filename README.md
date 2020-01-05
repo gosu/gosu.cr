@@ -8,11 +8,11 @@ Implemented
 * [x] Gosu
 * [x] Window
 * [x] TextInput
+* [x] Font
 * [ ] Song (in-progress)
 * [ ] Color (in-progress)
 * [ ] Image (in-progress)
 * [ ] Sample
-* [ ] Font
 * [ ] GLTexInfo
 * [ ] Channel
 * [ ] Numeric helper functions e.g. `90.degrees_to_radians`
