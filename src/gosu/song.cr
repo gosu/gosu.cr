@@ -18,57 +18,58 @@ module Gosu
 
   class Song
     def self.current_song : Gosu::Song?
-      song = SongC.current_song
-      if song
-        Gosu::Song.new(song)
+      if SongC.current_song
+        @@current_song
       else
         nil
       end
     end
 
-    @__song : UInt8*
+    @@current_song : Gosu::Song?
 
-    def initialize(filename_or_pointer : String | UInt8*)
-      if filename_or_pointer.is_a?(String)
-        @__song = SongC.create_song(filename_or_pointer)
-      elsif filename_or_pointer.is_a?(Pointer(UInt8))
-        @__song = filename_or_pointer
-      else
-        raise "Expected a filename or a pointer to another Gosu::Song"
-      end
+    def initialize(filename : String)
+      raise "Not such file: #{filename}" unless File.exists?(filename)
+
+      @__song = SongC.create_song(filename)
+    end
+
+    # :nodoc:
+    def pointer
+      @__song
     end
 
     def play(looping : Bool = false)
-      SongC.song_play(@__song, looping)
+      @@current_song = self
+      SongC.song_play(pointer, looping)
     end
 
     def playing? : Bool
-      SongC.song_playing(@__song)
+      SongC.song_playing(pointer)
     end
 
     def pause
-      SongC.song_pause(@__song)
+      SongC.song_pause(pointer)
     end
 
     def paused? : Bool
-      SongC.song_paused(@__song)
+      SongC.song_paused(pointer)
     end
 
     def volume : Float64
-      SongC.song_volume(@__song)
+      SongC.song_volume(pointer)
     end
 
     def volume=(double : Float64)
-      SongC.song_set_volume(@__song, double.clamp(0.0, 1.0))
+      SongC.song_set_volume(pointer, double.clamp(0.0, 1.0))
     end
 
     def stop
-      SongC.song_stop(@__song)
+      SongC.song_stop(pointer)
     end
 
     # :nodoc:
     def finalize
-      SongC.destroy_song(@__song)
+      SongC.destroy_song(pointer)
     end
   end
 end

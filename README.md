@@ -9,8 +9,8 @@ Implemented
 * [x] Window
 * [x] TextInput
 * [x] Font
+* [X] Song
 * [ ] Image (90%+)
-* [ ] Song (in-progress)
 * [ ] Color (in-progress)
 * [ ] Sample
 * [ ] GLTexInfo

@@ -4,8 +4,8 @@ require "./gosu/window"
 require "./gosu/text_input"
 require "./gosu/image"
 require "./gosu/font"
+require "./gosu/song"
 
-# require "./gosu/song"
 # require "./gosu/sample"
 # require "./gosu/channel"
 
