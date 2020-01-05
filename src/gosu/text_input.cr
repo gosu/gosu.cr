@@ -80,6 +80,7 @@ module Gosu
       TextInputC.set_filter_result(pointer, string)
     end
 
+    # :nodoc:
     def release
       TextInputC.destroy_textinput(pointer)
     end

@@ -13,6 +13,14 @@ module Gosu
     # Callbacks
     fun window_set_draw = Gosu_Window_set_draw(window : UInt8*, function : Void* ->, data : Void*)
     fun window_set_update = Gosu_Window_set_update(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_button_down = Gosu_Window_set_button_down(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
+    fun window_set_button_up = Gosu_Window_set_button_up(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
+    fun window_set_drop = Gosu_Window_set_drop(window : UInt8*, function : (Void*, UInt8* ->), data : Void*)
+    fun window_set_needs_redraw = Gosu_Window_set_needs_redraw(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_needs_cursor = Gosu_Window_set_needs_cursor(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_close = Gosu_Window_set_close(window : UInt8*, function : Void* ->, data : Void*)
+
+    fun window_button_down = Gosu_Window_gosu_button_down(window : UInt8*, id : UInt32)
 
     # Diamentions
     fun window_width = Gosu_Window_width(window : UInt8*) : Int32
@@ -21,6 +29,9 @@ module Gosu
     fun window_set_height = Gosu_Window_set_height(window : UInt8*, height : Int32)
     fun window_fullscreen = Gosu_Window_fullscreen(window : UInt8*) : Bool
     fun window_set_fullscreen = Gosu_Window_set_fullscreen(window : UInt8*, fullscreen : Bool)
+
+    fun window_update_interval = Gosu_Window_update_interval(window : UInt8*)
+    fun window_set_update_interval = Gosu_Window_set_update_interval(window : UInt8*, interval : Float64)
 
     # Mouse
     fun window_mouse_x = Gosu_Window_mouse_x(window : UInt8*) : Float64
@@ -34,8 +45,14 @@ module Gosu
   end
 
   class Window
-    @@boxed_draw : Pointer(Void)?
-    @@boxed_update : Pointer(Void)?
+    @boxed_draw : Pointer(Void)?
+    @boxed_update : Pointer(Void)?
+    @boxed_button_down : Pointer(Void)?
+    @boxed_button_up : Pointer(Void)?
+    @boxed_drop : Pointer(Void)?
+    @boxed_needs_redraw : Pointer(Void)?
+    @boxed_needs_cursor : Pointer(Void)?
+    @boxed_close : Pointer(Void)?
 
     @text_input : TextInput?
 
@@ -44,6 +61,12 @@ module Gosu
 
       _set_update_callback
       _set_draw_callback
+      _set_button_down_callback
+      _set_button_up_callback
+      _set_drop_callback
+      _set_needs_redraw_callback
+      _set_needs_cursor_callback
+      _set_close_callback
     end
 
     # The currently active `TextInput`. If not nil, all keyboard input will be handled by this object.
@@ -86,6 +109,7 @@ module Gosu
     # See `button_up`
     # See `Gosu.button_down?`
     def button_down(id : UInt32)
+      WindowC.window_button_down(@__pointer, id)
     end
 
     # This method is called before `update` if a button is released while the window has focus.
@@ -103,12 +127,14 @@ module Gosu
     #
     # See `#draw`
     def needs_redraw? : Bool
+      true
     end
 
     # This method can be overriden to control the visibility of the system cursor over your window, e.g., for level editors or other situations where introducing a custom cursor or hiding the default one is not desired.
     #
     # Returns whether the system cursor should be shown.
     def needs_cursor? : Bool
+      false
     end
 
     # Called when a file is dropped onto the window.
@@ -202,10 +228,12 @@ module Gosu
 
     # Returns the interval between calls to `update`, in milliseconds.
     def update_interval : Float64
+      WindowC.window_update_interval(@__pointer)
     end
 
     # Sets the interval between calls to `update`.
     def update_interval=(double : Float64)
+      WindowC.window_set_update_interval(@__pointer, double)
     end
 
     # Enters a modal loop where the Window is visible on screen and receives calls to draw, update etc.
@@ -232,12 +260,12 @@ module Gosu
       proc = ->{ update }
       box = Box.box(proc)
 
-      @@boxed_update = box
+      @boxed_update = box
 
       WindowC.window_set_update(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @@boxed_update)
+      }, @boxed_update)
     end
 
     # :nodoc:
@@ -245,12 +273,90 @@ module Gosu
       proc = ->{ draw }
       box = Box.box(proc)
 
-      @@boxed_draw = box
+      @boxed_draw = box
 
       WindowC.window_set_draw(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @@boxed_draw)
+      }, @boxed_draw)
+    end
+
+    # :nodoc:
+    def _set_button_down_callback
+      proc = ->(id : UInt32){ button_down(id) }
+      box = Box.box(proc)
+
+      @boxed_button_down = box
+
+      WindowC.window_set_button_down(@__pointer, ->(data : Void*, id : UInt32) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call(id)
+      }, @boxed_button_down)
+    end
+
+    # :nodoc:
+    def _set_button_up_callback
+      proc = ->(id : UInt32){ button_up(id) }
+      box = Box.box(proc)
+
+      @boxed_button_up = box
+
+      WindowC.window_set_button_up(@__pointer, ->(data : Void*, id : UInt32) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call(id)
+      }, @boxed_button_up)
+    end
+
+    # :nodoc:
+    def _set_drop_callback
+      proc = ->(filename : String){ drop(filename) }
+      box = Box.box(proc)
+
+      @boxed_drop = box
+
+      WindowC.window_set_drop(@__pointer, ->(data : Void*, filename : UInt8*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call(String.new(filename))
+      }, @boxed_drop)
+    end
+
+    # :nodoc:
+    def _set_needs_redraw_callback
+      proc = ->{ needs_redraw? }
+      box = Box.box(proc)
+
+      @boxed_needs_redraw = box
+
+      WindowC.window_set_needs_redraw(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @boxed_needs_redraw)
+    end
+
+    # :nodoc:
+    def _set_needs_cursor_callback
+      proc = ->{ needs_cursor? }
+      box = Box.box(proc)
+
+      @boxed_needs_cursor = box
+
+      WindowC.window_set_needs_cursor(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @boxed_needs_cursor)
+    end
+
+    # :nodoc:
+    def _set_close_callback
+      proc = ->{ close }
+      box = Box.box(proc)
+
+      @boxed_close = box
+
+      WindowC.window_set_close(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @boxed_close)
     end
 
     # :nodoc:
