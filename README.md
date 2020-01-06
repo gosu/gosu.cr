@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/gosu/gosu.cr.svg?branch=master)](https://travis-ci.com/gosu/gosu.cr)
+[![Actions Status](https://github.com/gosu/gosu.cr/workflows/Crystal%20CI/badge.svg?branch=master)](https://github.com/gosu/gosu.cr/actions)[![Build Status](https://travis-ci.com/gosu/gosu.cr.svg?branch=master)](https://travis-ci.com/gosu/gosu.cr)
 # gosu.cr
 Shard for using Gosu with Crystal
 
