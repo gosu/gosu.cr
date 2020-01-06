@@ -11,7 +11,7 @@ jobs:
       image: crystallang/crystal
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install Gosu dependencies
       run: |
         apt-get update -y -qq
