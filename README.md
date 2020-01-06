@@ -1,4 +1,5 @@
 # gosu.cr
+[![Build Status](https://travis-ci.com/gosu/gosu.cr.svg?branch=master)](https://travis-ci.com/gosu/gosu.cr)
 Shard for using Gosu with Crystal
 
 _Under development:_ implementation is incomplete.
