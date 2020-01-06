@@ -1,6 +1,32 @@
 language: crystal
 
-# Uncomment the following if you'd like Travis to run specs and check code formatting
+addons:
+  apt:
+    packages:
+      - libsdl2-dev
+      - libgl1-mesa-dev
+      - libfontconfig1-dev
+      - libopenal-dev
+      - libsndfile1-dev
+      - libmpg123-dev
+      # For C++
+      - cmake
+
+before_script:
+  - |
+    echo $PWD
+    cd ..
+    git clone --single-branch --branch c_library https://github.com/cyberarm/gosu
+    cd gosu
+
+    mkdir -p cmake/build
+    cd cmake/build
+    cmake ..
+    make
+    sudo make install
+    cd ../..
+
+
 script:
   - crystal spec
   - crystal tool format --check
