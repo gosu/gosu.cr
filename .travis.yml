@@ -16,7 +16,7 @@ before_script:
   - |
     echo $PWD
     cd ..
-    git clone --single-branch --branch c_library https://github.com/cyberarm/gosu
+    git clone --depth=1 --single-branch --branch c_library https://github.com/cyberarm/gosu
     cd gosu
 
     mkdir -p cmake/build
@@ -26,6 +26,10 @@ before_script:
     sudo make install
     cd ../..
 
+    cd ../gosu.cr
+
+git:
+  depth: 1
 
 script:
   - crystal spec
