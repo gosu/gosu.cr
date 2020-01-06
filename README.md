@@ -10,11 +10,11 @@ Implemented
 * [x] TextInput
 * [x] Font
 * [X] Song
+* [X] Sample
+* [X] Channel
 * [ ] Image (90%+)
 * [ ] Color (in-progress)
-* [ ] Sample
 * [ ] GLTexInfo
-* [ ] Channel
 * [ ] Numeric helper functions e.g. `90.degrees_to_radians`
 
 ## Installation

@@ -5,9 +5,9 @@ require "./gosu/text_input"
 require "./gosu/image"
 require "./gosu/font"
 require "./gosu/song"
+require "./gosu/sample"
+require "./gosu/channel"
 
-# require "./gosu/sample"
-# require "./gosu/channel"
 
 module Gosu
   # Returns version of gosu.cr shard
