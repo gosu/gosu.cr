@@ -8,7 +8,6 @@ require "./gosu/song"
 require "./gosu/sample"
 require "./gosu/channel"
 
-
 module Gosu
   # Returns version of gosu.cr shard
   SHARD_VERSION = "0.1.0"

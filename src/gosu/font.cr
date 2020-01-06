@@ -13,7 +13,7 @@ module Gosu
     fun draw_text = Gosu_Font_draw_text(pointer : UInt8*, text : UInt8*, x : Float64, y : Float64, z : Float64,
                                         scale_x : Float64, scale_y : Float64, color : UInt32, mode : UInt32)
     fun draw_markup = Gosu_Font_draw_markup(pointer : UInt8*, text : UInt8*, x : Float64, y : Float64, z : Float64,
-                                        scale_x : Float64, scale_y : Float64, color : UInt32, mode : UInt32)
+                                            scale_x : Float64, scale_y : Float64, color : UInt32, mode : UInt32)
     fun draw_text_rel = Gosu_Font_draw_text_rel(pointer : UInt8*, text : UInt8*, x : Float64, y : Float64, z : Float64,
                                                 rel_x : Float64, rel_y : Float64, scale_x : Float64, scale_y : Float64,
                                                 color : UInt32, mode : UInt32)
@@ -63,22 +63,22 @@ module Gosu
     end
 
     def draw_markup(markup : String, x : Int32 | Float64, y : Int32 | Float64, z : Int32 | Float64,
-                  scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
-                  color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
+                    scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
+                    color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
       FontC.draw_markup(pointer, text, x, y, z, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def draw_text_rel(text : String, x : Int32 | Float64, y : Int32 | Float64, z : Int32 | Float64,
-                  rel_x : Int32 | Float64, rel_y : Int32 | Float64,
-                  scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
-                  color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
+                      rel_x : Int32 | Float64, rel_y : Int32 | Float64,
+                      scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
+                      color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
       FontC.draw_text_rel(pointer, text, x, y, z, rel_x, rel_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def draw_markup_rel(markup : String, x : Int32 | Float64, y : Int32 | Float64, z : Int32 | Float64,
-                  rel_x : Int32 | Float64, rel_y : Int32 | Float64,
-                  scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
-                  color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
+                        rel_x : Int32 | Float64, rel_y : Int32 | Float64,
+                        scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
+                        color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
       FontC.draw_markup_rel(pointer, text, x, y, z, rel_x, rel_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 

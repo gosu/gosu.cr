@@ -283,7 +283,7 @@ module Gosu
 
     # :nodoc:
     def _set_button_down_callback
-      proc = ->(id : UInt32){ button_down(id) }
+      proc = ->(id : UInt32) { button_down(id) }
       box = Box.box(proc)
 
       @boxed_button_down = box
@@ -296,7 +296,7 @@ module Gosu
 
     # :nodoc:
     def _set_button_up_callback
-      proc = ->(id : UInt32){ button_up(id) }
+      proc = ->(id : UInt32) { button_up(id) }
       box = Box.box(proc)
 
       @boxed_button_up = box
@@ -309,7 +309,7 @@ module Gosu
 
     # :nodoc:
     def _set_drop_callback
-      proc = ->(filename : String){ drop(filename) }
+      proc = ->(filename : String) { drop(filename) }
       box = Box.box(proc)
 
       @boxed_drop = box

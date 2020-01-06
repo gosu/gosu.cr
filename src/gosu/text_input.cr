@@ -35,7 +35,7 @@ module Gosu
     def initialize
       @__textinput = TextInputC.create_textinput
 
-      proc = ->(text : String){ protected_filter(text) }
+      proc = ->(text : String) { protected_filter(text) }
       box = Box.box(proc)
 
       @__boxed_filter = box
@@ -98,6 +98,7 @@ module Gosu
     # Example: Forcing input to all uppercase, alphanumeric characters.
     # ```
     # input = TextInput.new
+    #
     # def input.filter(text_in)
     #   text_in.upcase.gsub(/[^A-Z0-9]/, "")
     # end

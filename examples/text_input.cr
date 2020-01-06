@@ -1,4 +1,3 @@
-
 # This example demonstrates use of the TextInput class with three text field widgets.
 # One can cycle through them with tab, or click into the text fields and change their contents.
 
@@ -21,10 +20,10 @@
 require "../src/gosu"
 
 class TextField < Gosu::TextInput
-  FONT = Gosu::Font.new(20)
-  WIDTH = 350
-  LENGTH_LIMIT = 20
-  PADDING = 5
+  FONT         = Gosu::Font.new(20)
+  WIDTH        = 350
+  LENGTH_LIMIT =  20
+  PADDING      =   5
 
   INACTIVE_COLOR  = 0xcc_666666
   ACTIVE_COLOR    = 0xcc_ff6666
@@ -36,6 +35,7 @@ class TextField < Gosu::TextInput
   @window : Gosu::Window
   @x : Int32
   @y : Int32
+
   def initialize(window, x, y)
     # It's important to call the inherited constructor.
     super()

@@ -19,11 +19,11 @@ module Gosu
     end
 
     def play(volume : Float64 = 1.0, speed : Float64 = 1.0, looping : Bool = false) : Gosu::Channel
-      Gosu::Channel.new( SampleC.play(pointer, volume, speed, looping) )
+      Gosu::Channel.new(SampleC.play(pointer, volume, speed, looping))
     end
 
     def play_pan(pan : Float64 = 0.0, volume : Float64 = 1.0, speed : Float64 = 1.0, looping : Bool = false) : Gosu::Channel
-      Gosu::Channel.new( SampleC.play_pan(pointer, pan, volume, speed, looping) )
+      Gosu::Channel.new(SampleC.play_pan(pointer, pan, volume, speed, looping))
     end
 
     # :nodoc:

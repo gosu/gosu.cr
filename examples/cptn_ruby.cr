@@ -27,8 +27,8 @@
 
 require "../src/gosu"
 
-WIDTH = 640
-HEIGHT= 480
+WIDTH  = 640
+HEIGHT = 480
 
 GAME_PATH = File.expand_path("..", __FILE__)
 
@@ -113,11 +113,15 @@ class Player
     # Directional walking, horizontal movement
     if move_x > 0
       @dir = :right
-      move_x.times { if would_fit(1, 0); @x += 1; end }
+      move_x.times { if would_fit(1, 0)
+        @x += 1
+      end }
     end
     if move_x < 0
       @dir = :left
-      (-move_x).times { if would_fit(-1, 0); @x -= 1; end }
+      (-move_x).times { if would_fit(-1, 0)
+        @x -= 1
+      end }
     end
 
     # Acceleration/gravity
@@ -126,10 +130,18 @@ class Player
     @vy += 1
     # Vertical movement
     if @vy > 0
-      @vy.times { if would_fit(0, 1); @y += 1 else @vy = 0; end }
+      @vy.times { if would_fit(0, 1)
+        @y += 1
+      else
+        @vy = 0
+      end }
     end
     if @vy < 0
-      (-@vy).times { if would_fit(0, -1); @y -= 1 else @vy = 0; end }
+      (-@vy).times { if would_fit(0, -1)
+        @y -= 1
+      else
+        @vy = 0
+      end }
     end
   end
 

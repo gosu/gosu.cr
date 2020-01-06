@@ -15,7 +15,7 @@ module Gosu
     fun subimage = Gosu_Image_create_from_subimage(image : UInt8*, left : Int32, top : Int32, width : Int32, height : Int32) : UInt8*
 
     fun draw = Gosu_Image_draw(image : UInt8*, x : Float64, y : Float64, z : Float64,
-                                     scale_x : Float64, scale_y : Float64, color : UInt32, flags : UInt32)
+                               scale_x : Float64, scale_y : Float64, color : UInt32, flags : UInt32)
     fun draw_rot = Gosu_Image_draw_rot(image : UInt8*, x : Float64, y : Float64, z : Float64, angle : Float64,
                                        center_x : Float64, center_y : Float64, scale_x : Float64, scale_y : Float64,
                                        color : UInt32, flags : UInt32)
@@ -39,15 +39,15 @@ module Gosu
     def self.from_text(text : String, line_height : Float64, font : String = Gosu.default_font_name, width : Float64 = -1,
                        spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
                        retro : Bool = false) : Gosu::Image
-      Gosu::Image.new( ImageC.create_image_from_text(text, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
-                                                     Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)) )
+      Gosu::Image.new(ImageC.create_image_from_text(text, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
+        Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)))
     end
 
     def self.from_markup(markup : String, line_height : Float64, font : String = Gosu.default_font_name, width : Float64 = -1,
-                       spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
-                       retro : Bool = false) : Gosu::Image
-      Gosu::Image.new( ImageC.create_image_from_markup(markup, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
-                                                       Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)) )
+                         spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
+                         retro : Bool = false) : Gosu::Image
+      Gosu::Image.new(ImageC.create_image_from_markup(markup, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
+        Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)))
     end
 
     def self.load_tiles(filename_or_image : String | Gosu::Image, width : Int32, height : Int32,
@@ -63,7 +63,6 @@ module Gosu
           callback = Box(typeof(proc)).unbox(data)
           callback.call(image)
         }, box, Gosu.image_flags(retro, tileable))
-
       else
         ImageC.load_tiles_from_image(filename_or_image.pointer, width, height, ->(data : Void*, image : UInt8*) {
           callback = Box(typeof(proc)).unbox(data)
@@ -128,10 +127,10 @@ module Gosu
                      x4 : Float64 | Int32, y4 : Float64 | Int32, c4 : Gosu::Color | Int64 | UInt32,
                      z : Float64 | Int32, mode : Symbol)
       ImageC.draw_as_quad(x1.to_f64, y1.to_f64, Gosu.color_to_drawop(c1),
-                          x2.to_f64, y2.to_f64, Gosu.color_to_drawop(c2),
-                          x3.to_f64, y3.to_f64, Gosu.color_to_drawop(c3),
-                          x4.to_f64, y4.to_f64, Gosu.color_to_drawop(c4),
-                          z.to_f64, Gosu.blend_mode(mode))
+        x2.to_f64, y2.to_f64, Gosu.color_to_drawop(c2),
+        x3.to_f64, y3.to_f64, Gosu.color_to_drawop(c3),
+        x4.to_f64, y4.to_f64, Gosu.color_to_drawop(c4),
+        z.to_f64, Gosu.blend_mode(mode))
     end
 
     def width
@@ -155,7 +154,7 @@ module Gosu
     end
 
     def subimage(left : Int32, top : Int32, width : Int32, height : Int32) : Gosu::Image
-      Gosu::Image.new( ImageC.subimage(pointer, left, top, width, height) )
+      Gosu::Image.new(ImageC.subimage(pointer, left, top, width, height))
     end
 
     # :nodoc:
