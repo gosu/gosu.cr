@@ -10,6 +10,8 @@ module Gosu
 
   class Sample
     def initialize(filename : String)
+      raise "Can not open file: #{filename}" unless File.exists?(filename)
+
       @__sample = SampleC.create_sample(filename)
     end
 

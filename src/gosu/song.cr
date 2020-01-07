@@ -28,7 +28,7 @@ module Gosu
     @@current_song : Gosu::Song?
 
     def initialize(filename : String)
-      raise "Not such file: #{filename}" unless File.exists?(filename)
+      raise "Can not open file: #{filename}" unless File.exists?(filename)
 
       @__song = SongC.create_song(filename)
     end

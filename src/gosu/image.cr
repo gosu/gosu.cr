@@ -36,15 +36,15 @@ module Gosu
   end
 
   class Image
-    def self.from_text(text : String, line_height : Float64, font : String = Gosu.default_font_name, width : Float64 = -1,
-                       spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
-                       retro : Bool = false) : Gosu::Image
+    def self.from_text(text : String, line_height : Float64 | Int32, font : String = Gosu.default_font_name, width : Float64 | Int32 = -1,
+                         spacing : Float64 | Int32 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
+                         retro : Bool = false) : Gosu::Image
       Gosu::Image.new(ImageC.create_image_from_text(text, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
         Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)))
     end
 
-    def self.from_markup(markup : String, line_height : Float64, font : String = Gosu.default_font_name, width : Float64 = -1,
-                         spacing : Float64 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
+    def self.from_markup(markup : String, line_height : Float64 | Int32, font : String = Gosu.default_font_name, width : Float64 | Int32 = -1,
+                         spacing : Float64 | Int32 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
                          retro : Bool = false) : Gosu::Image
       Gosu::Image.new(ImageC.create_image_from_markup(markup, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
         Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)))
@@ -149,8 +149,8 @@ module Gosu
       ImageC.save(pointer, filename)
     end
 
-    def insert(other : Gosu::Image, x : Int32, y : Int32)
-      ImageC.insert(pointer, other.pointer, x, y)
+    def insert(other : Gosu::Image, x : Int32 | Float64, y : Int32 | Float64)
+      ImageC.insert(pointer, other.pointer, x.to_i, y.to_i)
     end
 
     def subimage(left : Int32, top : Int32, width : Int32, height : Int32) : Gosu::Image
