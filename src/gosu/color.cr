@@ -71,7 +71,7 @@ module Gosu
     end
 
     def alpha=(value : UInt8 | Int32) : UInt32
-      @color = ColorC.set_alpha(safe_to_u8(value))
+      @color = ColorC.set_alpha(@color, Color.safe_to_u8(value))
     end
 
     def red : UInt8
@@ -79,7 +79,7 @@ module Gosu
     end
 
     def red=(value : UInt8 | Int32) : UInt32
-      @color = ColorC.set_red(safe_to_u8(value))
+      @color = ColorC.set_red(@color, Color.safe_to_u8(value))
     end
 
     def green : UInt8
@@ -87,7 +87,7 @@ module Gosu
     end
 
     def green=(value : UInt8 | Int32) : UInt32
-      @color = ColorC.set_green(safe_to_u8(value))
+      @color = ColorC.set_green(@color, Color.safe_to_u8(value))
     end
 
     def blue : UInt8
@@ -95,7 +95,7 @@ module Gosu
     end
 
     def blue=(value : UInt8 | Int32) : UInt32
-      @color = ColorC.set_blue(safe_to_u8(value))
+      @color = ColorC.set_blue(@color, Color.safe_to_u8(value))
     end
 
     def hue : Float64

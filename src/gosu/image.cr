@@ -109,23 +109,23 @@ module Gosu
     # See https://github.com/gosu/gosu/wiki/Basic-Concepts#drawing-with-colours Drawing with colors, explained in the Gosu Wiki
     # See https://github.com/gosu/gosu/wiki/Basic-Concepts#z-ordering Z-ordering explained in the Gosu Wiki
     def draw(x : Float64 | Int32, y : Float64 | Int32, z : Float64 | Int32,
-             scale_x : Float64 | Int32 = 1.0, scale_y : Float64 | Int32 = 1.0, color : UInt32 = 0xffffffff,
+             scale_x : Float64 | Int32 = 1.0, scale_y : Float64 | Int32 = 1.0, color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE,
              mode : Symbol = :default)
-      ImageC.draw(pointer, x.to_i, y.to_i, z.to_i, scale_x.to_i, scale_y.to_i, color, Gosu.blend_mode(mode))
+      ImageC.draw(pointer, x.to_f64, y.to_f64, z.to_f64, scale_x.to_f64, scale_y.to_f64, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def draw_rot(x : Float64 | Int32, y : Float64 | Int32, z : Float64 | Int32,
                  angle : Float64 | Int32, center_x : Float64 | Int32 = 0.5, center_y : Float64 | Int32 = 0.5,
                  scale_x : Float64 | Int32 = 1, scale_y : Float64 | Int32 = 1, color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE,
                  mode : Symbol = :default)
-      ImageC.draw_rot(pointer, x, y, z, angle, center_x, center_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
+      ImageC.draw_rot(pointer, x.to_f64, y.to_f64, z.to_f64, angle.to_f64, center_x.to_f64, center_y.to_f64, scale_x.to_f64, scale_y.to_f64, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def draw_as_quad(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
                      x2 : Float64 | Int32, y2 : Float64 | Int32, c2 : Gosu::Color | Int64 | UInt32,
                      x3 : Float64 | Int32, y3 : Float64 | Int32, c3 : Gosu::Color | Int64 | UInt32,
                      x4 : Float64 | Int32, y4 : Float64 | Int32, c4 : Gosu::Color | Int64 | UInt32,
-                     z : Float64 | Int32, mode : Symbol)
+                     z : Float64 | Int32, mode : Symbol = :default)
       ImageC.draw_as_quad(x1.to_f64, y1.to_f64, Gosu.color_to_drawop(c1),
         x2.to_f64, y2.to_f64, Gosu.color_to_drawop(c2),
         x3.to_f64, y3.to_f64, Gosu.color_to_drawop(c3),
