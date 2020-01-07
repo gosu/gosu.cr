@@ -30,7 +30,7 @@ module Gosu
   end
 
   class Color
-    private def self.safe_to_u8(value : Int32 | UInt8) : UInt8
+    def self.safe_to_u8(value : Int32 | UInt8) : UInt8
       value.clamp(0, 255).to_u8
     end
 
@@ -63,7 +63,7 @@ module Gosu
     end
 
     def initialize(alpha : UInt8 | Int32, red : UInt8 | Int32, green : UInt8 | Int32, blue : UInt8 | Int32)
-      @color = ColorC.create_color_argb(safe_to_u8(alpha), safe_to_u8(red), safe_to_u8(green), safe_to_u8(blue))
+      @color = ColorC.create_color_argb(Color.safe_to_u8(alpha), Color.safe_to_u8(red), Color.safe_to_u8(green), Color.safe_to_u8(blue))
     end
 
     def alpha : UInt8
@@ -136,10 +136,6 @@ module Gosu
 
     def ==(other : Gosu::Color) : Bool
       self.gl == other.gl
-    end
-
-    private def safe_to_u8(value : Int32 | UInt8) : UInt8
-      value.clamp(0, 255).to_u8
     end
 
     NONE    = Gosu::Color.argb(0x00_000000)
