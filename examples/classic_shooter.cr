@@ -17,6 +17,7 @@ WIDTH = 640
 HEIGHT = 480
 
 GAME_PATH = File.expand_path("..", __FILE__)
+SMOKE = Gosu::Image.new("#{GAME_PATH}/media/smoke.png")
 
 TRANSPARENT = 0
 
@@ -34,6 +35,7 @@ class Map
   # Radius of a crater, Shadow included.
   SHADOW_RADIUS = 45
 
+  @crater_segments : Array(Gosu::Image)
   def initialize
     # Let's start with something simple and load the sky via RMagick.
     # Loading SVG files isn't possible with Gosu, so say wow!
@@ -41,10 +43,43 @@ class Map
     @sky = Gosu::Image.new("#{GAME_PATH}/media/landscape.png", tileable: true)
     @image = Gosu.render(1, 1) {}
 
+    # Generate a bunch of single pixel width images used to dig out the craters
+    @crater_segments = generate_circle(CRATER_RADIUS)
+
     # Create the map
     @pixels = [] of Gosu::Color
     create_map
     extract_map_pixels
+  end
+
+  def generate_circle(radius, color = Gosu::Color::NONE) : Array(Gosu::Image)
+    images = [] of Gosu::Image
+
+    width = radius * 2;
+    height = 0
+    x2 = 0
+
+    width.times do |i|
+      x2 = i
+      height = 0
+
+      radius.times do |j|
+        if (Gosu.distance(radius, radius, x2, j) < radius)
+          height = radius - j
+          break
+        end
+      end
+
+      y2 = radius - height
+      y3 = radius + height
+
+      _height = (y3 - y2) == 0 ? 1 : (y3 - y2)
+      images << Gosu.render(1, _height) do
+        Gosu.draw_line(1, 0, color, 1, _height, color)
+      end
+    end
+
+    return images
   end
 
   def pixel_color(x, y) : Gosu::Color
@@ -68,35 +103,44 @@ class Map
   end
 
   def blast(x, y)
-    # TODO: Reimplement
+    @crater_segments.size.times do |i|
+      image = @crater_segments[i]
+      @image.insert(image, x - (CRATER_RADIUS - i), y - (image.height // 2))
+    end
+
+    extract_map_pixels
   end
 
   private def create_map
     # TODO: Reimplement level generation
     earth = Gosu::Image.new("#{GAME_PATH}/media/earth.png")
+    star = Gosu::Image.new("#{GAME_PATH}/media/large_star.png")
 
     # Paint about half the map with the earth texture
+    heightmap = [] of Int32
+    seed = rand(0xffffff)
+    frequency = 0.01
+    amplitude = rand(25..100)
+    WIDTH.times do |x|
+      heightmap << (amplitude * (Math.cos(frequency * (seed + x)) + 1) / 2).to_i
+    end
+
+    strips = Gosu::Image.load_tiles("#{GAME_PATH}/media/earth.png", 1, earth.height)
+
     @image = Gosu.render(WIDTH, HEIGHT) do
-      (WIDTH / earth.width).ceil.to_i.times do |x|
-        ((HEIGHT / 2) / earth.height).ceil.to_i.times do |y|
-          earth.draw(x * earth.width, (HEIGHT / 2) + y * earth.height, 0)
+      ((HEIGHT / 2) / earth.height).ceil.to_i.times do |y|
+        WIDTH.times do |x|
+          _height = heightmap[x]
+          strips[x % earth.width].draw(x, (HEIGHT // 2) + y * earth.height + _height, 0)
         end
       end
+
+      _x = (WIDTH // 2) - (star.width // 2)
+      _height = heightmap[_x]
+      _y = ((HEIGHT // 2) + _height) - star.height
+
+      star.draw(_x, _y, 0)
     end
-
-
-    # called here to make `solid?` work for star placement
-    extract_map_pixels
-
-    # Finally, place the star in the middle of the map, just onto the ground.
-    star = Gosu::Image.new("#{GAME_PATH}/media/large_star.png")
-    star_y = 0
-    until solid?(WIDTH // 2, star_y)
-      star_y += 20
-    end
-
-    @image.insert(star, (WIDTH - star.width) // 2, star_y - star.height)
-    extract_map_pixels
   end
 
   private def extract_map_pixels
@@ -266,8 +310,7 @@ class Missile
       5.times { @window.objects << Particle.new(x - 25 + rand(51), y - 25 + rand(51)) }
       @window.map.blast(x, y)
       # # Weeee, stereo sound!
-      ### DEATH ###
-      EXPLOSION.play((1.0 * @x // WIDTH) * 2 - 1)
+      EXPLOSION.play_pan((1.0 * @x / WIDTH) * 2 - 1)
 
       return false
     else
@@ -289,8 +332,6 @@ end
 # Very minimal object that just draws a fading particle.
 
 class Particle
-  @@image = Gosu::Image.new("#{GAME_PATH}/media/smoke.png")
-
   def initialize(@x : Int32, @y : Int32)
     # All Particle instances use the same image
 
@@ -307,7 +348,7 @@ class Particle
   end
 
   def draw
-    @@image.draw(@x - 25, @y - 25, 0, 1, 1, @color)
+    SMOKE.draw(@x - 25, @y - 25, 0, 1, 1, @color)
   end
 
   def hit_by?(missile)
@@ -331,13 +372,13 @@ class ClassicShooter < Gosu::Window
     @player_instructions = [] of Gosu::Image
     @player_won_messages = [] of Gosu::Image
     2.times do |plr|
-      @player_instructions << Gosu::Image.from_text(
-        "It is the #{ plr == 0 ? "green" : "red" } toy soldier's turn.\n" +
-        "(Arrow keys to walk and aim, Return to jump, Space to shoot)",
+      @player_instructions << Gosu::Image.from_markup(
+        "It is the #{ plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>" } toy soldier's turn.\n" +
+        "(Arrow keys to walk and aim, Control to jump, Space to shoot)",
         30, width: width, align: :center)
 
-      @player_won_messages << Gosu::Image.from_text(
-        "The #{ plr == 0 ? "green" : "red" } toy soldier has won!",
+      @player_won_messages << Gosu::Image.from_markup(
+        "The #{ plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>" } toy soldier has won!",
         30, width: width, align: :center)
     end
 
@@ -345,6 +386,13 @@ class ClassicShooter < Gosu::Window
     @map = Map.new
     @players = [] of Player
     @objects = [] of Player | Missile | Particle
+    @arrow = Gosu.render(32, 64) do
+      Gosu.draw_rect(8, 0, 16, 48, Gosu::Color::WHITE)
+      Gosu.draw_triangle(0, 48, Gosu::Color::WHITE,
+                         32, 48, Gosu::Color::WHITE,
+                         16, 64, Gosu::Color::WHITE,
+                         0)
+    end
 
     # Let any player start.
     @current_player = rand(2)
@@ -352,7 +400,7 @@ class ClassicShooter < Gosu::Window
     @waiting = false
 
     # Crystal currently doesn't like `self` being called before instance variables are set
-    # or it fails, worried about them possibly being nil.
+    # or it fails, worries about them possibly being nil.
     p1, p2 = Player.new(self, 100, 40, 0xff_308000), Player.new(self, WIDTH - 100, 40, 0xff_803000)
 
     @players.push(p1, p2)
@@ -365,6 +413,13 @@ class ClassicShooter < Gosu::Window
     # Draw the main game.
     @map.draw
     @objects.each { |o| o.draw }
+
+    # Draw an arrow over the current players head
+    unless @players[@current_player].dead
+      player = @players[@current_player]
+
+      @arrow.draw(player.x - @arrow.width // 2, player.y - (@arrow.height + 32), 0, 1, 1, Gosu::Color::GRAY)
+    end
 
     # If any text should be displayed, draw it - and add a nice black border around it
     # by drawing it four times, with a little offset in each direction.
@@ -398,7 +453,7 @@ class ClassicShooter < Gosu::Window
       player.aim_down     if Gosu.button_down? Gosu::KB_DOWN
       player.try_walk(-1) if Gosu.button_down? Gosu::KB_LEFT
       player.try_walk(+1) if Gosu.button_down? Gosu::KB_RIGHT
-      player.try_jump     if Gosu.button_down? Gosu::KB_RETURN
+      player.try_jump     if Gosu.button_down?(Gosu::KB_LEFT_CONTROL) || Gosu.button_down?(Gosu::KB_RIGHT_CONTROL)
     end
   end
 
