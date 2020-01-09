@@ -65,7 +65,7 @@ module Gosu
     def draw_markup(markup : String, x : Int32 | Float64, y : Int32 | Float64, z : Int32 | Float64,
                     scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
                     color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
-      FontC.draw_markup(pointer, text, x, y, z, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
+      FontC.draw_markup(pointer, markup, x, y, z, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def draw_text_rel(text : String, x : Int32 | Float64, y : Int32 | Float64, z : Int32 | Float64,
@@ -79,7 +79,7 @@ module Gosu
                         rel_x : Int32 | Float64, rel_y : Int32 | Float64,
                         scale_x : Int32 | Float64 = 1, scale_y : Int32 | Float64 = 1,
                         color : Gosu::Color | Int64 | UInt32 = Gosu::Color::WHITE, mode : Symbol = :default)
-      FontC.draw_markup_rel(pointer, text, x, y, z, rel_x, rel_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
+      FontC.draw_markup_rel(pointer, markup, x, y, z, rel_x, rel_y, scale_x, scale_y, Gosu.color_to_drawop(color), Gosu.blend_mode(mode))
     end
 
     def []=(codepoint : String, image : Gosu::Image)

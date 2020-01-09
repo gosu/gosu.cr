@@ -13,11 +13,11 @@
 
 require "../src/gosu"
 
-WIDTH = 640
+WIDTH  = 640
 HEIGHT = 480
 
 GAME_PATH = File.expand_path("..", __FILE__)
-SMOKE = Gosu::Image.new("#{GAME_PATH}/media/smoke.png")
+SMOKE     = Gosu::Image.new("#{GAME_PATH}/media/smoke.png")
 
 TRANSPARENT = 0
 
@@ -36,9 +36,10 @@ class Map
   SHADOW_RADIUS = 45
 
   @crater_segments : Array(Gosu::Image)
+
   def initialize
     @sky = Gosu::Image.new("#{GAME_PATH}/media/landscape.png", tileable: true)
-    @image = Gosu.render(1, 1) {}
+    @image = Gosu.render(1, 1) { }
 
     # Generate a bunch of single pixel width images used to dig out the craters
     @crater_segments = generate_circle(CRATER_RADIUS)
@@ -52,7 +53,7 @@ class Map
   def generate_circle(radius, color = Gosu::Color::NONE) : Array(Gosu::Image)
     images = [] of Gosu::Image
 
-    width = radius * 2;
+    width = radius * 2
     height = 0
     x2 = 0
 
@@ -317,7 +318,7 @@ class Missile
 
   def draw
     # Just draw a small rectangle.
-    Gosu.draw_rect x-2, y-2, 4, 4, 0xff_800000
+    Gosu.draw_rect x - 2, y - 2, 4, 4, 0xff_800000
   end
 
   def hit_by?(missile)
@@ -370,12 +371,12 @@ class ClassicShooter < Gosu::Window
     @player_won_messages = [] of Gosu::Image
     2.times do |plr|
       @player_instructions << Gosu::Image.from_markup(
-        "It is the #{ plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>" } toy soldier's turn.\n" +
+        "It is the #{plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>"} toy soldier's turn.\n" +
         "(Arrow keys to walk and aim, Control to jump, Space to shoot)",
         30, width: width, align: :center)
 
       @player_won_messages << Gosu::Image.from_markup(
-        "The #{ plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>" } toy soldier has won!",
+        "The #{plr == 0 ? "<c=ff00ff00>green</c>" : "<c=ffff0000>red</c>"} toy soldier has won!",
         30, width: width, align: :center)
     end
 
@@ -386,9 +387,9 @@ class ClassicShooter < Gosu::Window
     @arrow = Gosu.render(32, 64) do
       Gosu.draw_rect(8, 0, 16, 48, Gosu::Color::WHITE)
       Gosu.draw_triangle(0, 48, Gosu::Color::WHITE,
-                         32, 48, Gosu::Color::WHITE,
-                         16, 64, Gosu::Color::WHITE,
-                         0)
+        32, 48, Gosu::Color::WHITE,
+        16, 64, Gosu::Color::WHITE,
+        0)
     end
 
     # Let any player start.
@@ -430,7 +431,7 @@ class ClassicShooter < Gosu::Window
       cur_text.draw(x + 1, y, 0, 1, 1, 0xff_000000)
       cur_text.draw(x, y - 1, 0, 1, 1, 0xff_000000)
       cur_text.draw(x, y + 1, 0, 1, 1, 0xff_000000)
-      cur_text.draw(x,     y, 0, 1, 1, 0xff_ffffff)
+      cur_text.draw(x, y, 0, 1, 1, 0xff_ffffff)
     end
   end
 
@@ -440,17 +441,17 @@ class ClassicShooter < Gosu::Window
     @waiting &&= !@objects.grep(Missile).empty?
 
     # Remove all objects whose update method returns false.
-    ### FAILING
+    # ## FAILING
     @objects.reject! { |o| o.update == false }
 
     # If it's a player's turn, forward controls.
     if !@waiting && !@players[@current_player].dead
       player = @players[@current_player]
-      player.aim_up       if Gosu.button_down? Gosu::KB_UP
-      player.aim_down     if Gosu.button_down? Gosu::KB_DOWN
+      player.aim_up if Gosu.button_down? Gosu::KB_UP
+      player.aim_down if Gosu.button_down? Gosu::KB_DOWN
       player.try_walk(-1) if Gosu.button_down? Gosu::KB_LEFT
       player.try_walk(+1) if Gosu.button_down? Gosu::KB_RIGHT
-      player.try_jump     if Gosu.button_down?(Gosu::KB_LEFT_CONTROL) || Gosu.button_down?(Gosu::KB_RIGHT_CONTROL)
+      player.try_jump if Gosu.button_down?(Gosu::KB_LEFT_CONTROL) || Gosu.button_down?(Gosu::KB_RIGHT_CONTROL)
     end
   end
 

@@ -302,13 +302,13 @@ module Gosu
   def self.font_alignment_flags(mode) : UInt32
     case mode
     when :left
-      0.to_u32
+      0_u32
     when :right
-      1.to_u32
+      1_u32
     when :center
-      2.to_u32
+      2_u32
     when :justify
-      3.to_u32
+      3_u32
     else
       return mode if mode.is_a?(UInt32)
       raise "No such mode: #{mode}"
@@ -317,14 +317,14 @@ module Gosu
 
   # Converts `mode` to number.
   # Valid  blend modes are: `:default` and `:additive`.
-  def self.blend_mode(mode) : UInt32
+  def self.blend_mode(mode : Symbol) : UInt32
     case mode
     when :default
-      0.to_u32
+      0_u32
     when :additive, :add
-      1.to_u32
+      1_u32
     when :multiply
-      2.to_u32
+      2_u32
     else
       return mode if mode.is_a?(UInt32)
       raise "No such mode: #{mode}"

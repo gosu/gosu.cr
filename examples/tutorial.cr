@@ -4,9 +4,9 @@ GAME_PATH = File.expand_path("..", __FILE__)
 
 module ZOrder
   BACKGROUND = 0
-  STARS = 1
-  PLAYER = 2
-  UI = 3
+  STARS      = 1
+  PLAYER     = 2
+  UI         = 3
 end
 
 class Player
@@ -83,7 +83,7 @@ class Star
   def draw
     img = @animation[Gosu.milliseconds // 100 % @animation.size]
     img.draw(@x - img.width / 2.0, @y - img.height / 2.0,
-        ZOrder::STARS, 1, 1, @color, :add)
+      ZOrder::STARS, 1, 1, @color, :add)
   end
 end
 

@@ -37,8 +37,8 @@ module Gosu
 
   class Image
     def self.from_text(text : String, line_height : Float64 | Int32, font : String = Gosu.default_font_name, width : Float64 | Int32 = -1,
-                         spacing : Float64 | Int32 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
-                         retro : Bool = false) : Gosu::Image
+                       spacing : Float64 | Int32 = 0, align : Symbol = :left, bold : Bool = false, italic : Bool = false, underline : Bool = false,
+                       retro : Bool = false) : Gosu::Image
       Gosu::Image.new(ImageC.create_image_from_text(text, font, line_height, width, spacing, Gosu.font_alignment_flags(align),
         Gosu.font_flags(bold, italic, underline), Gosu.image_flags(retro)))
     end

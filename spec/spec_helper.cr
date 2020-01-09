@@ -18,21 +18,30 @@ class Gosu::Image
     return false unless img.is_a?(Gosu::Image)
     return false if self.width != img.width || self.height != img.height
 
-    blob = img.to_blob
+    blob = img.to_blob.bytes
     differences = [] of Float64
 
     self.to_blob.each_byte.with_index do |byte, idx|
-      delta = (byte - blob.byte_at(idx)).abs
+      delta = (byte.to_i - blob[idx].to_i).abs
       differences << (delta / 255.0) if delta > 0
     end
 
     # If the average color difference is only subtle even on "large" parts of the image its still ok (e.g. differently rendered color gradients) OR
     # if the color difference is huge but on only a few pixels its ok too (e.g. a diagonal line may be off a few pixels)
-    (1 - (differences.sum / differences.size) >= threshold) || (1 - (differences.size / blob.size.to_f) >= threshold)
+    result = (1 - (differences.sum / differences.size) >= threshold) || (1 - (differences.size / blob.size.to_f) >= threshold)
+    return result
   end
 end
 
 module SpecHelper
+  def self.media_path(fname = "")
+    File.join(File.dirname(__FILE__), "media", fname)
+  end
+
+  def media_path(fname = "")
+    SpecHelper.media_path(fname)
+  end
+
   def actual_from_expected_filename(expected)
     actual_basename = File.basename(expected, ".png") + ".actual.png"
     File.join(File.dirname(expected), actual_basename)
