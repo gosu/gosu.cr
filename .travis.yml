@@ -11,6 +11,8 @@ addons:
       - libmpg123-dev
       # For C++
       - cmake
+services:
+  - xvfb
 
 before_script:
   - |
