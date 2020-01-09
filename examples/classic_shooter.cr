@@ -438,7 +438,7 @@ class ClassicShooter < Gosu::Window
   def update
     # if waiting for the next player's turn, continue to do so until the missile has
     # hit something.
-    @waiting &&= !@objects.grep(Missile).empty?
+    @waiting &&= !@objects.select(Missile).empty?
 
     # Remove all objects whose update method returns false.
     # ## FAILING
