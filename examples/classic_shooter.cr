@@ -413,7 +413,7 @@ class ClassicShooter < Gosu::Window
     @objects.each { |o| o.draw }
 
     # Draw an arrow over the current players head
-    unless @players[@current_player].dead
+    unless @players[@current_player].dead || @waiting
       player = @players[@current_player]
 
       @arrow.draw(player.x - @arrow.width // 2, player.y - (@arrow.height + 32), 0, 1, 1, Gosu::Color::GRAY)
@@ -441,7 +441,6 @@ class ClassicShooter < Gosu::Window
     @waiting &&= !@objects.select(Missile).empty?
 
     # Remove all objects whose update method returns false.
-    # ## FAILING
     @objects.reject! { |o| o.update == false }
 
     # If it's a player's turn, forward controls.
