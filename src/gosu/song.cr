@@ -70,7 +70,6 @@ module Gosu
       SongC.song_paused(pointer)
     end
 
-
     # Returns the song's playback volume.
     def volume : Float64
       SongC.song_volume(pointer)

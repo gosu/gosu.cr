@@ -33,12 +33,6 @@ describe "Font" do
   it "test_draw_and_draw_rel" do
     font = Gosu::Font.new(10, name: media_path("daniel.otf"))
 
-    Gosu.render(200, 100) {
-      20.times do
-        font.draw_markup("Hi! <c=f00>Red.\r\nNew   line! Äöß\n", 5, 5, -6, 2.0, 4.0, 0xff_ff00ff, :add)
-      end
-    }.save("out.png")
-
     assert_output_matches("test_font/draw_markup", 0.98, {200, 100}) do
       # draw this string repeatedly to make up for opacity differences in OpenGL renderers.
       20.times do
