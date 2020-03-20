@@ -18,10 +18,10 @@ class Gosu::Image
     return false unless img.is_a?(Gosu::Image)
     return false if self.width != img.width || self.height != img.height
 
-    blob = img.to_blob.bytes
+    blob = img.to_blob
     differences = [] of Float64
 
-    self.to_blob.each_byte.with_index do |byte, idx|
+    self.to_blob.each.with_index do |byte, idx|
       delta = (byte.to_i - blob[idx].to_i).abs
       differences << (delta / 255.0) if delta > 0
     end

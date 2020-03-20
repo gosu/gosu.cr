@@ -69,6 +69,6 @@ describe "Image" do
       canvas.insert stamp, i * 300, i * 123
     end
 
-    assert_image_matches "test_image/insert", canvas, 1.00
+    assert_image_matches "test_image/insert", canvas, 0.99
   end
 end

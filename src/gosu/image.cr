@@ -231,7 +231,7 @@ module Gosu
 
     # Returns the associated texture contents as binary string of packed RGBA values.
     def to_blob
-      String.new(ImageC.to_blob(pointer), width * height * 4)
+      Bytes.new(ImageC.to_blob(pointer), width * height * 4)
     end
 
     # Saves the image to a file. The file format is determined from the file extension.

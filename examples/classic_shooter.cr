@@ -143,7 +143,7 @@ class Map
   end
 
   private def extract_map_pixels
-    data = @image.to_blob.bytes
+    data = @image.to_blob
     @pixels.clear
 
     HEIGHT.times do |y|
