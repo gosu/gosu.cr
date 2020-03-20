@@ -47,6 +47,19 @@ module SpecHelper
     File.join(File.dirname(expected), actual_basename)
   end
 
+  def assert_image_matches(expected, actual_image, threshold)
+    expected_filename = File.expand_path("#{expected}.png", File.dirname(__FILE__))
+    actual_filename = actual_from_expected_filename(expected_filename)
+
+    unless actual_image.similar?(Gosu::Image.new(expected_filename), threshold)
+      # When a comparison fails, save the "actual" image next to the expected one.
+      actual_image.save actual_filename
+      raise "Image should look similar to #{expected_filename}"
+    end
+    # Since the comparison succeeded, we can clean up the last "actual" image (if any).
+    File.delete actual_filename if File.exists?(actual_filename)
+  end
+
   def assert_output_matches(expected, threshold, size, &block)
     expected = File.expand_path("#{expected}.png", File.dirname(__FILE__))
 

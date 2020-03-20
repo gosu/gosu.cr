@@ -8,6 +8,8 @@ module Gosu
     fun create_image_from_markup = Gosu_Image_create_from_markup(text : UInt8*, font : UInt8*, line_height : Float64,
                                                                  width : Int32, spacing : Float64, alignment_flags : UInt32,
                                                                  font_flags : UInt32, image_flags : UInt32) : UInt8*
+    fun create_image_from_blob = Gosu_Image_create_from_blob(blob : UInt8*, size : UInt32, width : Int32, height : Int32,
+                                                             image_flags : UInt32) : UInt8*
     fun load_tiles = Gosu_Image_create_from_tiles(filename : UInt8*, width : Int32, height : Int32,
                                                   function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
     fun load_tiles_from_image = Gosu_Image_create_tiles_from_image(image : UInt8*, width : Int32, height : Int32,
@@ -106,6 +108,21 @@ module Gosu
       return tiles
     end
 
+    # Creates a new image with the given dimensions and RGBA pixel data.
+    #
+    # `width` Width of the image in pixels.
+    #
+    # `height` Height of the image in pixels.
+    #
+    # `rgba` A string containing raw binary image data, with one byte ('uint8') per RGBA component.
+    def self.from_blob(width : Int32, height : Int32, rgba : Bytes = Bytes.new(0))
+      if rgba.size == 0
+        rgba = Bytes.new(width * height * 4, 0)
+      end
+
+      self.new(width: width, height: height, rgba: rgba)
+    end
+
     # Loads an image from a file or an `Gosu::ImageBlob` image.
     #
     # NOTE: For Windows Bitmap (BMP) images, magenta (FF00FF, often called "magic pink" in this context) is treated as a chroma key and all pixels of that color are automatically rendered fully transparent.
@@ -127,6 +144,10 @@ module Gosu
 
     def initialize(pointer : UInt8*)
       @__image = pointer
+    end
+
+    def initialize(width : Int32, height : Int32, rgba : Bytes, image_flags : UInt32 = Gosu.image_flags)
+      @__image = ImageC.create_image_from_blob(rgba, width * height * 4, width, height, image_flags)
     end
 
     # :nodoc:
