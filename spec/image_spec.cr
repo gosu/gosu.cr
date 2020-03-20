@@ -42,8 +42,8 @@ private def rect_image(w, h)
   white = [0xff_u8, 0xff_u8, 0xff_u8, 0xff_u8]
 
   blob = red * w +
-          (red + white * (w - 2) + red) * (h - 2) +
-          red * w
+         (red + white * (w - 2) + red) * (h - 2) +
+         red * w
 
   blob.each_with_index do |byte, i|
     rgba[i] = byte
