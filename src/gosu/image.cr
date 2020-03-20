@@ -35,6 +35,14 @@ module Gosu
     fun insert = Gosu_Image_insert(image : UInt8*, other : UInt8*, x : Int32, y : Int32)
 
     fun destroy_image = Gosu_Image_destroy(image : UInt8*)
+
+    fun gl_tex_info_create = Gosu_Image_gl_tex_info_create(UInt8*) : Pointer(GLTexInfo)
+    fun gl_tex_info_destroy = Gosu_Image_gl_tex_info_destroy(Pointer(GLTexInfo))
+
+    struct GLTexInfo
+      tex_name : Int32
+      left, right, top, bottom : Float64
+    end
   end
 
   class Image
@@ -272,8 +280,9 @@ module Gosu
     # NOTE: Some images may be too large to fit on a single texture; this method returns nil in those cases.
     #
     # See `Gosu::GLTexInfo`
-    # TODO: Not yet implemented.
     def gl_tex_info
+      tex_info = ImageC.gl_tex_info_create(pointer)
+      tex_info ? tex_info.value : nil
     end
 
     # :nodoc:

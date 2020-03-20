@@ -71,4 +71,19 @@ describe "Image" do
 
     assert_image_matches "test_image/insert", canvas, 0.99
   end
+
+  it "test_gl_tex_info" do
+    image = Gosu::Image.from_blob(100, 100)
+    tex_info = image.gl_tex_info
+
+    tex_info.should_not be_nil
+
+    if tex_info
+      tex_info.tex_name.should_not be < 0
+      tex_info.left.should_not eq(0)
+      tex_info.right.should_not eq(0)
+      tex_info.top.should_not eq(0)
+      tex_info.bottom.should_not eq(0)
+    end
+  end
 end
