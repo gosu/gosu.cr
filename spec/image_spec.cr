@@ -54,7 +54,7 @@ end
 
 describe "Image" do
   it "test_image_from_blob" do
-    assert_image_matches "test_image/from_blob", circle_image(70), 1.00
+    assert_image_matches "test_image/from_blob", circle_image(70), 0.99
   end
 
   # This uses large images so it implicitly tests the whole stack:
