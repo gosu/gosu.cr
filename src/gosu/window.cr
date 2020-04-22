@@ -20,7 +20,7 @@ module Gosu
     fun window_set_needs_cursor = Gosu_Window_set_needs_cursor(window : UInt8*, function : Void* ->, data : Void*)
     fun window_set_close = Gosu_Window_set_close(window : UInt8*, function : Void* ->, data : Void*)
 
-    fun window_button_down = Gosu_Window_gosu_button_down(window : UInt8*, id : UInt32)
+    fun window_button_down = Gosu_Window_default_button_down(window : UInt8*, id : UInt32)
 
     # Diamentions
     fun window_width = Gosu_Window_width(window : UInt8*) : Int32

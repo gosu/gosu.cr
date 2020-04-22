@@ -20,7 +20,7 @@ jobs:
       run: |
         echo $PWD
         cd ..
-        git clone --depth=1 --single-branch --branch c_library https://github.com/cyberarm/gosu
+        git clone --depth=1 --single-branch --branch master https://github.com/gosu/gosu
         cd gosu
 
         mkdir -p cmake/build

@@ -13,9 +13,9 @@ Implemented
 * [X] Song
 * [X] Sample
 * [X] Channel
-* [ ] Image (90%+)
+* [X] Image
+* [X] GLTexInfo
 * [ ] Color (in-progress)
-* [ ] GLTexInfo
 * [ ] Numeric helper functions e.g. `90.degrees_to_radians`
 
 ## Installation
