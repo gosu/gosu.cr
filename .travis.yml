@@ -1,4 +1,7 @@
+dist: bionic
 language: crystal
+crystal:
+  - latest
 
 addons:
   apt:
