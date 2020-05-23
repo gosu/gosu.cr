@@ -149,9 +149,13 @@ class Map
     HEIGHT.times do |y|
       WIDTH.times do |x|
         index = (x + WIDTH * y) * 4
-        r, g, b, a = data[index, 4]
+        r, g, b, alpha = data[index, 4]
 
-        @pixels << Gosu::Color.new(a, r, g, b)
+        if alpha == 0
+          @pixels << Gosu::Color::NONE
+        else
+          @pixels << Gosu::Color::BLACK
+        end
       end
     end
   end
