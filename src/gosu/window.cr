@@ -19,10 +19,12 @@ module Gosu
     fun window_set_needs_redraw = Gosu_Window_set_needs_redraw(window : UInt8*, function : Void* ->, data : Void*)
     fun window_set_needs_cursor = Gosu_Window_set_needs_cursor(window : UInt8*, function : Void* ->, data : Void*)
     fun window_set_close = Gosu_Window_set_close(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_gamepad_connected = Gosu_Window_set_gamepad_connected(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
+    fun window_set_gamepad_disconnected = Gosu_Window_set_gamepad_disconnected(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
 
     fun window_button_down = Gosu_Window_default_button_down(window : UInt8*, id : UInt32)
 
-    # Diamentions
+    # Dimensions
     fun window_width = Gosu_Window_width(window : UInt8*) : Int32
     fun window_height = Gosu_Window_height(window : UInt8*) : Int32
     fun window_set_width = Gosu_Window_set_width(window : UInt8*, width : Int32)
@@ -53,6 +55,8 @@ module Gosu
     @boxed_needs_redraw : Pointer(Void)?
     @boxed_needs_cursor : Pointer(Void)?
     @boxed_close : Pointer(Void)?
+    @boxed_gamepad_connected : Pointer(Void)?
+    @boxed_gamepad_disconnected : Pointer(Void)?
 
     @text_input : Gosu::TextInput?
 
@@ -67,6 +71,8 @@ module Gosu
       _set_needs_redraw_callback
       _set_needs_cursor_callback
       _set_close_callback
+      _set_gamepad_connected_callback
+      _set_gamepad_disconnected_callback
     end
 
     # The currently active `TextInput`. If not nil, all keyboard input will be handled by this object.
@@ -154,6 +160,12 @@ module Gosu
     # Tells the window to end the current run loop as soon as possible.
     def close! : Bool
       WindowC.window_close!(@__pointer)
+    end
+
+    def gamepad_connected(id : UInt32)
+    end
+
+    def gamepad_disconnected(id : UInt32)
     end
 
     # The window's width, in pixels. This only counts the drawable area and does not include any borders or decorations added by the window manager.
@@ -357,6 +369,32 @@ module Gosu
         callback = Box(typeof(proc)).unbox(data)
         callback.call
       }, @boxed_close)
+    end
+
+    # :nodoc:
+    def _set_gamepad_connected_callback
+      proc = ->(id : UInt32) { gamepad_connected(id) }
+      box = Box.box(proc)
+
+      @boxed_gamepad_connected = box
+
+      WindowC.window_set_gamepad_connected(@__pointer, ->(data : Void*, id : UInt32) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call(id)
+      }, @boxed_gamepad_connected)
+    end
+
+    # :nodoc:
+    def _set_gamepad_disconnected_callback
+      proc = ->(id : UInt32) { gamepad_disconnected(id) }
+      box = Box.box(proc)
+
+      @boxed_gamepad_disconnected = box
+
+      WindowC.window_set_gamepad_disconnected(@__pointer, ->(data : Void*, id : UInt32) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call(id)
+      }, @boxed_gamepad_disconnected)
     end
 
     # :nodoc:

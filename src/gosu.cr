@@ -15,7 +15,7 @@ module Gosu
   SHARD_VERSION = "0.1.0"
 
   # Returns version of Gosu that gosu.cr was built against
-  VERSION = "0.14.5"
+  VERSION = "0.15.2"
 
   @[Link("gosu")]
   lib GosuC
@@ -46,6 +46,9 @@ module Gosu
     fun button_down = Gosu_button_down(id : UInt32) : Bool
     fun button_id_to_char = Gosu_button_id_to_char(id : UInt32) : UInt8*
     fun button_char_to_id = Gosu_button_char_to_id(char : UInt8*) : UInt32
+    fun button_name = Gosu_button_name(id : UInt32) : UInt8*
+    fun gamepad_name = Gosu_gamepad_name(id : UInt32) : UInt8*
+    fun axis = Gosu_axis(id : UInt32) : Float64
 
     fun draw_line = Gosu_draw_line(x1 : Float64, y1 : Float64, c1 : UInt32,
                                    x2 : Float64, y2 : Float64, c2 : UInt32,
@@ -196,6 +199,18 @@ module Gosu
 
   def self.char_to_button_id(char : String) : UInt32
     GosuC.button_char_to_id(char)
+  end
+
+  def self.button_name(id : UInt32) : String
+    String.new(GosuC.button_name(id))
+  end
+
+  def self.gamepad_name(id : UInt32) : String
+    String.new(GosuC.gamepad_name(id))
+  end
+
+  def self.axis(id : UInt32) : Float64
+    GosuC.axis(id)
   end
 
   def self.draw_line(x1 : Float64 | Int32, y1 : Float64 | Int32, c1 : Gosu::Color | Int64 | UInt32,
