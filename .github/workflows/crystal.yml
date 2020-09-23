@@ -23,6 +23,7 @@ jobs:
         git clone --depth=1 --single-branch --branch master https://github.com/gosu/gosu
         cd gosu
 
+        sed -i 's/^cmake_policy/# &/' cmake/GosuConfig.cmake
         mkdir -p build
         cd build
         cmake ..
