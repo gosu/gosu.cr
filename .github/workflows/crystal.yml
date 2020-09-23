@@ -23,13 +23,13 @@ jobs:
         git clone --depth=1 --single-branch --branch master https://github.com/gosu/gosu
         cd gosu
 
-        mkdir -p cmake/build
-        cd cmake/build
+        mkdir -p build
+        cd build
         cmake ..
         sed -i 's@set(CMAKE_INSTALL_PREFIX "/usr/local")@set(CMAKE_INSTALL_PREFIX "/usr")@g' cmake_install.cmake
         make
         make install
-        cd ../..
+        cd ..
 
         cd ../gosu.cr
     - name: Install dependencies
