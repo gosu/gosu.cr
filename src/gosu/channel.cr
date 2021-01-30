@@ -1,5 +1,5 @@
 module Gosu
-  @[Link("gosu")]
+  @[Link("gosu-ffi")]
   lib ChannelC
     fun channel_destroy = Gosu_Channel_destroy(pointer : UInt8*)
 

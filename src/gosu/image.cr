@@ -1,5 +1,5 @@
 module Gosu
-  @[Link("gosu")]
+  @[Link("gosu-ffi")]
   lib ImageC
     fun create_image = Gosu_Image_create(filename : UInt8*, flags : UInt32) : UInt8*
     fun create_image_from_text = Gosu_Image_create_from_text(text : UInt8*, font : UInt8*, line_height : Float64,

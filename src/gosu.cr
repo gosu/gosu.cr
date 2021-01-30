@@ -17,7 +17,7 @@ module Gosu
   # Returns version of Gosu that gosu.cr was built against
   VERSION = "0.15.2"
 
-  @[Link("gosu")]
+  @[Link("gosu-ffi")]
   lib GosuC
     fun fps = Gosu_fps : UInt32
     fun flush = Gosu_flush : Void
@@ -293,6 +293,16 @@ module Gosu
 
   def self.color_to_drawop(color : Gosu::Color | Int64 | UInt32)
     color.is_a?(Gosu::Color) ? color.gl : color
+  end
+
+  def self.window_flags(fullscreen = false, resizable = false, borderless = false) : UInt32
+    flags = 0_u32
+
+    flags |= 1 if fullscreen
+    flags |= 2 if resizable
+    flags |= 4 if borderless
+
+    return flags
   end
 
   # SEE: https://github.com/gosu/gosu/blob/master/Gosu/GraphicsBase.hpp

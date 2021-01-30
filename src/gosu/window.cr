@@ -1,7 +1,7 @@
 module Gosu
-  @[Link("gosu")]
+  @[Link("gosu-ffi")]
   lib WindowC
-    fun create_window = Gosu_Window_create(width : Int32, height : Int32, fullscreen : Bool, update_interval : Float64, resizable : Bool) : UInt8*
+    fun create_window = Gosu_Window_create(width : Int32, height : Int32, window_flags : UInt32, update_interval : Float64) : UInt8*
     fun window_show = Gosu_Window_show(window : UInt8*)
     fun window_tick = Gosu_Window_tick(window : UInt8*) : Bool
     fun window_caption = Gosu_Window_caption(window : UInt8*) : UInt8*
@@ -60,8 +60,8 @@ module Gosu
 
     @text_input : Gosu::TextInput?
 
-    def initialize(width, height, fullscreen = false, update_interval = 16.66666667, resizable = false)
-      @__pointer = WindowC.create_window(width, height, fullscreen, update_interval, resizable)
+    def initialize(width, height, fullscreen = false, update_interval = 16.66666667, resizable = false, borderless = false)
+      @__pointer = WindowC.create_window(width, height, Gosu.window_flags(fullscreen, resizable, borderless), update_interval)
 
       _set_update_callback
       _set_draw_callback
