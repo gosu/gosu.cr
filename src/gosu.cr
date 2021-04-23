@@ -12,16 +12,16 @@ require "./gosu/channel"
 
 module Gosu
   # Returns version of gosu.cr shard
-  SHARD_VERSION = "0.1.0"
+  SHARD_VERSION = "0.2.0"
 
-  # Returns version of Gosu that gosu.cr was built against
-  VERSION = "0.15.2"
+  # Returns version of Gosu that gosu.cr was built/tested against
+  VERSION = "1.2.0"
 
   @[Link("gosu-ffi")]
   lib GosuC
     fun fps = Gosu_fps : UInt32
     fun flush = Gosu_flush : Void
-    fun language = Gosu_language : UInt8*
+    fun user_languages = Gosu_user_languages(function : (Void*, UInt8* ->), data : Void*) : UInt8*
     fun milliseconds = Gosu_milliseconds : UInt64
     fun default_font_name = Gosu_default_font_name : UInt8*
 
@@ -87,8 +87,23 @@ module Gosu
     GosuC.flush
   end
 
+  def self.user_languages : Array(String)
+    languages = [] of String
+
+    proc = ->(language : UInt8*) { languages << String.new(language) }
+    box = Box.box(proc)
+
+    GosuC.user_languages(->(data : Void*, language : UInt8*) {
+          callback = Box(typeof(proc)).unbox(data)
+          callback.call(language)
+        }, box)
+
+    languages
+  end
+
+  @[Deprecated("Use `#user_languages` instead")]
   def self.language : String
-    String.new(GosuC.language)
+    @@language_cache ||= (user_languages.first? || "en_US")
   end
 
   def self.milliseconds : UInt64

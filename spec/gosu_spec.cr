@@ -24,6 +24,10 @@ describe Gosu do
   it "test misc" do
     Gosu.language.should match(/^[a-z]{2}/)
 
+    Gosu.user_languages.each do |lang|
+      lang.should match(/^[a-z]{2}/)
+    end
+
     # TODO: This test can cause trouble if run after other tests, which might have updated Gosu.fps.
     # assert_equal 0, Gosu.fps, "Gosu.fps should be 0 as there is nothing drawn"
 
