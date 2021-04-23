@@ -43,7 +43,7 @@ module Gosu
       TextInputC.set_filter(pointer, ->(data : Void*, text : UInt8*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(String.new(text))
-      }, @__boxed_filter)
+      }, @__boxed_filter.not_nil!)
     end
 
     # :nodoc:

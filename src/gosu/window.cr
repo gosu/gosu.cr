@@ -277,7 +277,7 @@ module Gosu
       WindowC.window_set_update(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @boxed_update)
+      }, @boxed_update.not_nil!)
     end
 
     # :nodoc:
@@ -290,7 +290,7 @@ module Gosu
       WindowC.window_set_draw(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @boxed_draw)
+      }, @boxed_draw.not_nil!)
     end
 
     # :nodoc:
@@ -303,7 +303,7 @@ module Gosu
       WindowC.window_set_button_down(@__pointer, ->(data : Void*, id : UInt32) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(id)
-      }, @boxed_button_down)
+      }, @boxed_button_down.not_nil!)
     end
 
     # :nodoc:
@@ -316,7 +316,7 @@ module Gosu
       WindowC.window_set_button_up(@__pointer, ->(data : Void*, id : UInt32) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(id)
-      }, @boxed_button_up)
+      }, @boxed_button_up.not_nil!)
     end
 
     # :nodoc:
@@ -329,7 +329,7 @@ module Gosu
       WindowC.window_set_drop(@__pointer, ->(data : Void*, filename : UInt8*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(String.new(filename))
-      }, @boxed_drop)
+      }, @boxed_drop.not_nil!)
     end
 
     # :nodoc:
@@ -342,7 +342,7 @@ module Gosu
       WindowC.window_set_needs_redraw(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @boxed_needs_redraw)
+      }, @boxed_needs_redraw.not_nil!)
     end
 
     # :nodoc:
@@ -355,7 +355,7 @@ module Gosu
       WindowC.window_set_needs_cursor(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @boxed_needs_cursor)
+      }, @boxed_needs_cursor.not_nil!)
     end
 
     # :nodoc:
@@ -368,7 +368,7 @@ module Gosu
       WindowC.window_set_close(@__pointer, ->(data : Void*) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call
-      }, @boxed_close)
+      }, @boxed_close.not_nil!)
     end
 
     # :nodoc:
@@ -381,7 +381,7 @@ module Gosu
       WindowC.window_set_gamepad_connected(@__pointer, ->(data : Void*, id : UInt32) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(id)
-      }, @boxed_gamepad_connected)
+      }, @boxed_gamepad_connected.not_nil!)
     end
 
     # :nodoc:
@@ -394,7 +394,7 @@ module Gosu
       WindowC.window_set_gamepad_disconnected(@__pointer, ->(data : Void*, id : UInt32) {
         callback = Box(typeof(proc)).unbox(data)
         callback.call(id)
-      }, @boxed_gamepad_disconnected)
+      }, @boxed_gamepad_disconnected.not_nil!)
     end
 
     # :nodoc:
