@@ -1,5 +1,6 @@
 name: gosu
 version: 0.2.0
+crystal: ">= 0.35, < 2.0"
 
 authors:
   - Cyberarm <matthewlikesrobots@gmail.com>
