@@ -44,7 +44,7 @@ end
 Window.new.show
 ```
 
-Where possible gosu.cr imitates the [Ruby gem](https://rubydoc.info/github/gosu/gosu).
+Where possible gosu.cr imitates the [Ruby gem](https://rubydoc.info/gems/gosu).
 
 ## Development
 
