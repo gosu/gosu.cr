@@ -25,14 +25,13 @@ jobs:
 
         mkdir -p build
         cd build
-        cmake ..
-        sed -i 's@set(CMAKE_INSTALL_PREFIX "/usr/local")@set(CMAKE_INSTALL_PREFIX "/usr")@g' cmake_install.cmake
+        cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr ..
         make
         make install
-        cd ..
 
-        cd ../gosu.cr
     - name: Install dependencies
       run: shards install
     - name: Run tests
-      run: xvfb-run crystal spec
+      run: |
+        xvfb-run crystal spec
+        crystal tool format --check

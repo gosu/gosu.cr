@@ -94,9 +94,9 @@ module Gosu
     box = Box.box(proc)
 
     GosuC.user_languages(->(data : Void*, language : UInt8*) {
-          callback = Box(typeof(proc)).unbox(data)
-          callback.call(language)
-        }, box)
+      callback = Box(typeof(proc)).unbox(data)
+      callback.call(language)
+    }, box)
 
     languages
   end
