@@ -21,6 +21,8 @@ module Gosu
     fun window_set_close = Gosu_Window_set_close(window : UInt8*, function : Void* ->, data : Void*)
     fun window_set_gamepad_connected = Gosu_Window_set_gamepad_connected(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
     fun window_set_gamepad_disconnected = Gosu_Window_set_gamepad_disconnected(window : UInt8*, function : (Void*, UInt32 ->), data : Void*)
+    fun window_set_gain_focus = Gosu_Window_set_gain_focus(window : UInt8*, function : Void* ->, data : Void*)
+    fun window_set_lose_focus = Gosu_Window_set_lose_focus(window : UInt8*, function : Void* ->, data : Void*)
 
     fun window_button_down = Gosu_Window_default_button_down(window : UInt8*, id : UInt32)
 
@@ -57,6 +59,8 @@ module Gosu
     @boxed_close : Pointer(Void)?
     @boxed_gamepad_connected : Pointer(Void)?
     @boxed_gamepad_disconnected : Pointer(Void)?
+    @boxed_gain_focus : Pointer(Void)?
+    @boxed_lose_focus : Pointer(Void)?
 
     @text_input : Gosu::TextInput?
 
@@ -73,6 +77,8 @@ module Gosu
       _set_close_callback
       _set_gamepad_connected_callback
       _set_gamepad_disconnected_callback
+      _set_gain_focus_callback
+      _set_lose_focus_callback
     end
 
     # The currently active `TextInput`. If not nil, all keyboard input will be handled by this object.
@@ -166,6 +172,12 @@ module Gosu
     end
 
     def gamepad_disconnected(id : UInt32)
+    end
+
+    def gain_focus
+    end
+
+    def lose_focus
     end
 
     # The window's width, in pixels. This only counts the drawable area and does not include any borders or decorations added by the window manager.
@@ -395,6 +407,32 @@ module Gosu
         callback = Box(typeof(proc)).unbox(data)
         callback.call(id)
       }, @boxed_gamepad_disconnected.not_nil!)
+    end
+
+    # :nodoc:
+    def _set_gain_focus_callback
+      proc = ->{ gain_focus }
+      box = Box.box(proc)
+
+      @boxed_gain_focus = box
+
+      WindowC.window_set_gain_focus(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @boxed_gain_focus.not_nil!)
+    end
+
+    # :nodoc:
+    def _set_lose_focus_callback
+      proc = ->{ lose_focus }
+      box = Box.box(proc)
+
+      @boxed_lose_focus = box
+
+      WindowC.window_set_lose_focus(@__pointer, ->(data : Void*) {
+        callback = Box(typeof(proc)).unbox(data)
+        callback.call
+      }, @boxed_lose_focus.not_nil!)
     end
 
     # :nodoc:
