@@ -15,7 +15,7 @@ jobs:
     - name: Install Gosu dependencies
       run: |
         apt-get update -y -qq
-        apt-get install -y libsdl2-dev libgl1-mesa-dev libfontconfig1-dev libopenal-dev libsndfile1-dev libmpg123-dev cmake xvfb
+        apt-get install -y build-essential libsdl2-dev libgl1-mesa-dev libgmp-dev libfontconfig1-dev cmake xvfb pulseaudio
     - name: Install Gosu
       run: |
         echo $PWD
