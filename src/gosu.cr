@@ -68,7 +68,7 @@ module Gosu
     fun offset_x = Gosu_offset_x(theta : Float64, r : Float64) : Float64
     fun offset_y = Gosu_offset_y(theta : Float64, r : Float64) : Float64
     fun distance = Gosu_distance(x1 : Float64, y1 : Float64, x2 : Float64, y2 : Float64) : Float64
-    fun angle = Gosu_angle(x1 : Float64, y2 : Float64, x2 : Float64, y2 : Float64) : Float64
+    fun angle = Gosu_angle(x1 : Float64, y1 : Float64, x2 : Float64, y2 : Float64) : Float64
     fun angle_diff = Gosu_angle_diff(angle1 : Float64, angle2 : Float64) : Float64
     fun random = Gosu_random(min : Float64, max : Float64) : Float64
 
