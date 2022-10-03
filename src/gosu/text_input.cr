@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib TextInputC
     fun create_textinput = Gosu_TextInput_create : UInt8*
     fun destroy_textinput = Gosu_TextInput_destroy(textinput : UInt8*)

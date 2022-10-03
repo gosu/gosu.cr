@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib FontC
     fun create_font = Gosu_Font_create(line_height : Int32, name : UInt8*, font_flags : UInt32) : UInt8*
 

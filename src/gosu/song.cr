@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib SongC
     fun create_song = Gosu_Song_create(filename : UInt8*) : UInt8*
     fun destroy_song = Gosu_Song_destroy(song : UInt8*)

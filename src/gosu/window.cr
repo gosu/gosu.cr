@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib WindowC
     fun create_window = Gosu_Window_create(width : Int32, height : Int32, window_flags : UInt32, update_interval : Float64) : UInt8*
     fun window_show = Gosu_Window_show(window : UInt8*)

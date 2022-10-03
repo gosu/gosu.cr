@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib SampleC
     fun create_sample = Gosu_Sample_create(filename : UInt8*) : UInt8*
     fun destroy_sample = Gosu_Sample_destroy(pointer : UInt8*)

@@ -17,6 +17,11 @@ module Gosu
   # Returns version of Gosu that gosu.cr was built/tested against
   VERSION = "1.2.0"
 
+  {% if flag?(:windows) %}
+    @[Link("gdi32")]
+    @[Link("user32")]
+    @[Link("Gosu")]
+  {% end %}
   @[Link("gosu-ffi")]
   lib GosuC
     fun fps = Gosu_fps : UInt32
@@ -76,6 +81,9 @@ module Gosu
     fun screen_height = Gosu_screen_height(window : UInt8*) : UInt32
     fun available_width = Gosu_available_width(window : UInt8*) : UInt32
     fun available_height = Gosu_available_height(window : UInt8*) : UInt32
+
+    fun clipboard = Gosu_clipboard() : UInt8*
+    fun set_clipboard = Gosu_set_clipboard(text : UInt8*)
   end
 
   # Returns the current framerate, in frames per second.
@@ -304,6 +312,14 @@ module Gosu
 
   def self.available_height(window : UInt8* = Pointer(UInt8).null) : UInt32
     GosuC.available_height(window)
+  end
+
+  def clipboard : String
+    String.new(GosuC.clipboard(pointer))
+  end
+
+  def clipboard=(text : String)
+    GosuC.set_clipboard(text)
   end
 
   def self.color_to_drawop(color : Gosu::Color | Int64 | UInt32)

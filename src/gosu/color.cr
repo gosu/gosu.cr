@@ -1,5 +1,4 @@
 module Gosu
-  @[Link("gosu-ffi")]
   lib ColorC
     fun create_color = Gosu_Color_create(color : UInt32) : UInt32
     fun create_color_argb = Gosu_Color_create_argb(alpha : UInt8, red : UInt8, green : UInt8, blue : UInt8) : UInt32
