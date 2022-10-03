@@ -566,4 +566,9 @@ module Gosu
   MS_NUM                  = Gosu::ButtonName::MS_NUM.to_u32
   GP_NUM                  = Gosu::ButtonName::GP_NUM.to_u32
   GP_NUM_PER_GAMEPAD      = Gosu::ButtonName::GP_NUM_PER_GAMEPAD.to_u32
+
+  FF_BOLD = 1_u32
+  FF_ITALIC = 2_u32
+  FF_UNDERLINE = 4_u32
+  FF_COMBINATIONS = 8_u32
 end

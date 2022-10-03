@@ -84,6 +84,8 @@ module Gosu
 
     fun clipboard = Gosu_clipboard() : UInt8*
     fun set_clipboard = Gosu_set_clipboard(text : UInt8*)
+
+    fun last_error = Gosu_last_error() : UInt8*
   end
 
   # Returns the current framerate, in frames per second.
@@ -384,6 +386,12 @@ module Gosu
     else
       return mode if mode.is_a?(UInt32)
       raise "No such mode: #{mode}"
+    end
+  end
+
+  def self.check_last_error
+    if (err = GosuC.last_error)
+      raise String.new(err)
     end
   end
 end

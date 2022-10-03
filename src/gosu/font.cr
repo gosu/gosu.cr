@@ -4,7 +4,6 @@ module Gosu
 
     fun name = Gosu_Font_name(pointer : UInt8*) : UInt8*
     fun height = Gosu_Font_height(pointer : UInt8*) : Int32
-    fun flags = Gosu_Font_flags(pointer : UInt8*) : UInt32
 
     fun text_width = Gosu_Font_text_width(pointer : UInt8*, text : UInt8*) : Float64
     fun markup_width = Gosu_Font_markup_width(pointer : UInt8*, text : UInt8*) : Float64
@@ -51,11 +50,6 @@ module Gosu
     # Returns the font's height in pixels.
     def height : Int32
       FontC.height(pointer)
-    end
-
-    # Returns the flags passed to `Gosu::Font` as a UInt32
-    def flags : UInt32
-      FontC.flags(pointer)
     end
 
     # Returns the width of a single line of text, in pixels, if it were drawn.
@@ -116,7 +110,10 @@ module Gosu
     #
     # NOTE: For any given character, this method MUST NOT be called more than once, and MUST NOT be called if a string containing the character has already been drawn.
     def []=(codepoint : String, image : Gosu::Image)
-      FontC.set_image(pointer, codepoint, self.flags, image.pointer)
+      Gosu::FF_COMBINATIONS.times do |font_flags|
+        FontC.set_image(pointer, codepoint, font_flags, image.pointer)
+        Gosu.check_last_error
+      end
     end
 
     # :nodoc:
