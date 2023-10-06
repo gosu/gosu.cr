@@ -47,9 +47,16 @@ Window.new.show
 Where possible gosu.cr imitates the [Ruby gem](https://rubydoc.info/gems/gosu).
 
 ## Development
-
+### Unix
 1. Install [gosu](https://github.com/gosu/gosu) as a system library, [see wiki](https://github.com/gosu/gosu/wiki/Getting-Started-on-Linux#compiling-gosu-for-c).
 (Note: may need to edit `gosu/cmake/build/cmake_install.cmake` to change `set(CMAKE_INSTALL_PREFIX "/usr/local")` to `set(CMAKE_INSTALL_PREFIX "/usr")`)
+2. Run your project: `crystal run --link-flags -lgosu-ffi YOU_PROGRAM.cr`
+
+### Windows
+1. Build [gosu](https://github.com/gosu/gosu) using Visual Studio or MSBuild (GosuFFI project)
+2. Copy `Gosu.lib` and `gosu-ffi.lib` into the /lib directory of your crystal-lang install
+3. Copy `SDL2.dll` and `gosu-ffi.dll` into your project directory
+4. Run your project: `crystal run YOUR_PROGRAM.cr`
 
 ## Contributing
 
