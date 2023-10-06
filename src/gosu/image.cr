@@ -7,7 +7,7 @@ module Gosu
     fun create_image_from_markup = Gosu_Image_create_from_markup(text : UInt8*, font : UInt8*, line_height : Float64,
                                                                  width : Int32, spacing : Float64, alignment_flags : UInt32,
                                                                  font_flags : UInt32, image_flags : UInt32) : UInt8*
-    fun create_image_from_blob = Gosu_Image_create_from_blob(blob : UInt8*, size : UInt32, width : Int32, height : Int32,
+    fun create_image_from_blob = Gosu_Image_create_from_blob(blob : UInt8*, size : LibC::SizeT, width : Int32, height : Int32,
                                                              image_flags : UInt32) : UInt8*
     fun load_tiles = Gosu_Image_create_from_tiles(filename : UInt8*, width : Int32, height : Int32,
                                                   function : (Void*, UInt8* ->), data : Void*, image_flags : UInt32)
